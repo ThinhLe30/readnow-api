@@ -3,30 +3,28 @@ import {
   Module,
   NestModule,
   RequestMethod,
-} from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { MorganModule, MorganInterceptor } from 'nest-morgan';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { WinstonModule } from 'nest-winston';
-import { MikroOrmConfig, NestWinsternConfig } from './configs';
-import { AppService } from './app.service';
-import { AppController } from './app.controller';
-import { AuthModule } from './modules/auth/auth.module';
-import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
-import { join } from 'path';
-import { JwtModule } from '@nestjs/jwt';
-import { UsersModule } from './modules/users/users.module';
-import { AWSModule } from './modules/aws/aws.module';
-import { PreauthMiddleware } from './modules/auth/preauth.middleware';
-import { ArticleModule } from './src/modules/article/article.module';
-import { ArticleModule } from './article/article.module';
-import { ArticleModule } from './modules/article/article.module';
+} from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { MikroOrmModule } from "@mikro-orm/nestjs";
+import { MorganModule, MorganInterceptor } from "nest-morgan";
+import { APP_INTERCEPTOR } from "@nestjs/core";
+import { WinstonModule } from "nest-winston";
+import { MikroOrmConfig, NestWinsternConfig } from "./configs";
+import { AppService } from "./app.service";
+import { AppController } from "./app.controller";
+import { AuthModule } from "./modules/auth/auth.module";
+import { HandlebarsAdapter, MailerModule } from "@nest-modules/mailer";
+import { join } from "path";
+import { JwtModule } from "@nestjs/jwt";
+import { UsersModule } from "./modules/users/users.module";
+import { AWSModule } from "./modules/aws/aws.module";
+import { PreauthMiddleware } from "./modules/auth/preauth.middleware";
+import { ArticleModule } from "./modules/article/article.module";
 
 @Module({
   imports: [
     MorganModule,
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env'] }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: [".env"] }),
     MikroOrmModule.forRootAsync({
       useFactory: () => MikroOrmConfig(),
     }),
@@ -48,7 +46,7 @@ import { ArticleModule } from './modules/article/article.module';
           from: `"No Reply " <${process.env.MAIL_FROM}>`,
         },
         template: {
-          dir: join(__dirname, 'src/templates/email'),
+          dir: join(__dirname, "src/templates/email"),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
@@ -74,14 +72,14 @@ import { ArticleModule } from './modules/article/article.module';
     AppService,
     {
       provide: APP_INTERCEPTOR,
-      useClass: MorganInterceptor('combined'),
+      useClass: MorganInterceptor("combined"),
     },
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(PreauthMiddleware).forRoutes({
-      path: 'auth/login/google',
+      path: "auth/login/google",
       method: RequestMethod.POST,
     });
   }

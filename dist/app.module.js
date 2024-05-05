@@ -23,10 +23,12 @@ const jwt_1 = require("@nestjs/jwt");
 const users_module_1 = require("./modules/users/users.module");
 const aws_module_1 = require("./modules/aws/aws.module");
 const preauth_middleware_1 = require("./modules/auth/preauth.middleware");
+const article_module_1 = require("./modules/article/article.module");
+const category_module_1 = require("./modules/category/category.module");
 let AppModule = exports.AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(preauth_middleware_1.PreauthMiddleware).forRoutes({
-            path: 'auth/login/google',
+            path: "auth/login/google",
             method: common_1.RequestMethod.POST,
         });
     }
@@ -35,7 +37,7 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             nest_morgan_1.MorganModule,
-            config_1.ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env'] }),
+            config_1.ConfigModule.forRoot({ isGlobal: true, envFilePath: [".env"] }),
             nestjs_1.MikroOrmModule.forRootAsync({
                 useFactory: () => (0, configs_1.MikroOrmConfig)(),
             }),
@@ -57,7 +59,7 @@ exports.AppModule = AppModule = __decorate([
                         from: `"No Reply " <${process.env.MAIL_FROM}>`,
                     },
                     template: {
-                        dir: (0, path_1.join)(__dirname, 'src/templates/email'),
+                        dir: (0, path_1.join)(__dirname, "src/templates/email"),
                         adapter: new mailer_1.HandlebarsAdapter(),
                         options: {
                             strict: true,
@@ -75,13 +77,15 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             users_module_1.UsersModule,
             aws_module_1.AWSModule,
+            article_module_1.ArticleModule,
+            category_module_1.CategoryModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [
             app_service_1.AppService,
             {
                 provide: core_1.APP_INTERCEPTOR,
-                useClass: (0, nest_morgan_1.MorganInterceptor)('combined'),
+                useClass: (0, nest_morgan_1.MorganInterceptor)("combined"),
             },
         ],
     })

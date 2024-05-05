@@ -402,5 +402,4 @@ FodyWeavers.xsd
 /dist
 /node_modules
 .env
-.env
 .vscode

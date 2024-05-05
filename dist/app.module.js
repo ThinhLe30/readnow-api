@@ -23,6 +23,7 @@ const jwt_1 = require("@nestjs/jwt");
 const users_module_1 = require("./modules/users/users.module");
 const aws_module_1 = require("./modules/aws/aws.module");
 const preauth_middleware_1 = require("./modules/auth/preauth.middleware");
+const article_module_1 = require("./src/modules/article/article.module");
 let AppModule = exports.AppModule = class AppModule {
     configure(consumer) {
         consumer.apply(preauth_middleware_1.PreauthMiddleware).forRoutes({
@@ -75,6 +76,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             users_module_1.UsersModule,
             aws_module_1.AWSModule,
+            article_module_1.ArticleModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [

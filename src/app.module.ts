@@ -20,6 +20,7 @@ import { UsersModule } from "./modules/users/users.module";
 import { AWSModule } from "./modules/aws/aws.module";
 import { PreauthMiddleware } from "./modules/auth/preauth.middleware";
 import { ArticleModule } from "./modules/article/article.module";
+import { CategoryModule } from "./modules/category/category.module";
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { ArticleModule } from "./modules/article/article.module";
     UsersModule,
     AWSModule,
     ArticleModule,
+    CategoryModule,
   ],
 
   controllers: [AppController],

@@ -172,6 +172,24 @@
           "length": 0,
           "mappedType": "datetime"
         },
+        "view_count": {
+          "name": "view_count",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
+        "vote_count": {
+          "name": "vote_count",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
         "category_id": {
           "name": "category_id",
           "type": "varchar(255)",
@@ -186,12 +204,39 @@
       "indexes": [
         {
           "columnNames": [
-            "category_id"
+            "author"
           ],
           "composite": false,
-          "keyName": "articles_category_id_unique",
+          "keyName": "articles_author_index",
           "primary": false,
-          "unique": true
+          "unique": false
+        },
+        {
+          "columnNames": [
+            "title"
+          ],
+          "composite": false,
+          "keyName": "articles_title_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "columnNames": [
+            "description"
+          ],
+          "composite": false,
+          "keyName": "articles_description_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "columnNames": [
+            "content"
+          ],
+          "composite": false,
+          "keyName": "articles_content_index",
+          "primary": false,
+          "unique": false
         },
         {
           "keyName": "PRIMARY",
@@ -266,7 +311,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "string"
         },
         "email": {
@@ -285,6 +330,15 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "mappedType": "string"
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
           "mappedType": "string"
         },
         "role": {
@@ -338,6 +392,124 @@
       ],
       "checks": [],
       "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "datetime",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "datetime",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "mappedType": "datetime"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "datetime",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 0,
+          "mappedType": "datetime"
+        },
+        "article_id": {
+          "name": "article_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "checklist",
+      "indexes": [
+        {
+          "columnNames": [
+            "article_id"
+          ],
+          "composite": false,
+          "keyName": "checklist_article_id_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "columnNames": [
+            "user_id"
+          ],
+          "composite": false,
+          "keyName": "checklist_user_id_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "keyName": "PRIMARY",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "checklist_article_id_foreign": {
+          "constraintName": "checklist_article_id_foreign",
+          "columnNames": [
+            "article_id"
+          ],
+          "localTableName": "checklist",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "articles",
+          "updateRule": "cascade"
+        },
+        "checklist_user_id_foreign": {
+          "constraintName": "checklist_user_id_foreign",
+          "columnNames": [
+            "user_id"
+          ],
+          "localTableName": "checklist",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "users",
+          "updateRule": "cascade"
+        }
+      }
     }
   ]
 }

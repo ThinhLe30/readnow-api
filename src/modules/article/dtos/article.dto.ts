@@ -1,37 +1,42 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
-import { Role } from "src/common/enum/common.enum";
+import { CategoryDTO } from "src/modules/category/dtos/category.dto";
+
 @Exclude()
-export class UserRtnDto {
-  @ApiProperty()
-  @Expose()
-  authId?: string;
-
-  @ApiProperty()
-  @Expose()
-  email!: string | undefined;
-
-  @ApiProperty()
-  @Expose()
-  name!: string;
-
-  @ApiProperty()
-  @Expose()
-  photo?: string;
-
-  @ApiProperty()
-  @Expose()
-  role!: Role;
-
+export class ArticleDTO {
   @ApiProperty()
   @Expose()
   id: string;
 
   @ApiProperty()
   @Expose()
-  created_at: Date;
+  author: string;
 
   @ApiProperty()
   @Expose()
-  updated_at: Date;
+  title: string;
+
+  @ApiProperty()
+  @Expose()
+  description: string;
+
+  @ApiProperty()
+  @Expose()
+  url: string;
+
+  @ApiProperty()
+  @Expose()
+  imageURL: string;
+
+  @ApiProperty()
+  @Expose()
+  content: string;
+
+  @ApiProperty()
+  @Expose()
+  publishedAt: Date;
+
+  @ApiProperty()
+  @Expose()
+  category: CategoryDTO;
 }

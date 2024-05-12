@@ -1,12 +1,12 @@
-import { Entity, Enum, Property, Unique } from '@mikro-orm/core';
-import { IsEmail } from 'class-validator';
-import { Role } from '../common/enum/common.enum';
-import { BaseUUID } from './baseUUID.enity';
+import { Entity, Enum, Property, Unique } from "@mikro-orm/core";
+import { IsEmail } from "class-validator";
+import { Role } from "../common/enum/common.enum";
+import { BaseUUID } from "./baseUUID.enity";
 
-@Entity({ tableName: 'users' })
+@Entity({ tableName: "users" })
 export class User extends BaseUUID {
   @Unique()
-  @Property({ nullable: false })
+  @Property({ nullable: true })
   authId!: string;
 
   @Unique()
@@ -16,6 +16,9 @@ export class User extends BaseUUID {
 
   @Property({ nullable: false })
   name!: string;
+
+  @Property({ nullable: true })
+  password?: string;
 
   @Property({ nullable: false })
   @Enum({ items: () => Role })

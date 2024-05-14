@@ -12,6 +12,8 @@ import {
   Query,
   Req,
   Res,
+  UploadedFile,
+  UseInterceptors,
   ValidationPipe,
 } from "@nestjs/common";
 import { ArticleService } from "./article.service";
@@ -27,6 +29,8 @@ import { ArticleAddDTO } from "./dtos/article.add.dto";
 import { plainToInstance } from "class-transformer";
 import { CategoryDTO } from "../category/dtos/category.dto";
 import { ArticleUpdateDTO } from "./dtos/article.update.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { fileFilter } from "./helpers/file-filter.helper";
 @Controller("articles")
 @ApiTags("articles")
 export class ArticleController {
@@ -120,13 +124,16 @@ export class ArticleController {
   @ApiResponse({
     status: 200,
   })
+  @UseInterceptors(FileInterceptor("image", fileFilter))
   async createCategory(
     @Res() res: Response,
     @Req() req,
-    @Body(new ValidationPipe({ transform: true })) dto: ArticleAddDTO
+    @Body(new ValidationPipe({ transform: true })) dto: ArticleAddDTO,
+    @UploadedFile()
+    file: Express.Multer.File
   ) {
     try {
-      await this.articleService.createArticle(dto);
+      await this.articleService.createArticle(file, dto);
       res.status(ApiResponseErrorCode.CREATED).json({
         status: ApiResponseStatus.SUCCESS,
         message: "Create article successfully",
@@ -149,14 +156,17 @@ export class ArticleController {
   @ApiResponse({
     status: 200,
   })
+  @UseInterceptors(FileInterceptor("image", fileFilter))
   async updateCategory(
     @Res() res: Response,
     @Req() req,
     @Body(new ValidationPipe({ transform: true })) dto: ArticleUpdateDTO,
-    @Param("id", ParseUUIDPipe) id: string
+    @Param("id", ParseUUIDPipe) id: string,
+    @UploadedFile()
+    file: Express.Multer.File
   ) {
     try {
-      await this.articleService.updateArticle(dto, id);
+      await this.articleService.updateArticle(file, dto, id);
       res.status(ApiResponseErrorCode.SUCCESS).json({
         status: ApiResponseStatus.SUCCESS,
         message: "Update article successfully",

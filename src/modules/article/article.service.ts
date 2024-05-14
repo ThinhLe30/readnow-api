@@ -8,9 +8,11 @@ import { ArticleAddDTO } from "./dtos/article.add.dto";
 import { Category } from "src/entities/category.entity";
 import { v4 as uuidv4 } from "uuid";
 import { ArticleUpdateDTO } from "./dtos/article.update.dto";
+import { AWSService } from "../aws/aws.service";
 @Injectable()
 export class ArticleService {
   constructor(
+    private readonly awsService: AWSService,
     private readonly em: EntityManager,
     @InjectRepository(Article)
     private readonly articleRepository: EntityRepository<Article>,
@@ -33,6 +35,7 @@ export class ArticleService {
             },
           },
         ],
+        $and: [{ deleted_at: null }],
       };
       const articles = await this.articleRepository.find(queryObj, {
         populate: ["category"],
@@ -51,6 +54,9 @@ export class ArticleService {
         { populate: ["category"] }
       );
       if (!article) return null;
+      if (article.deleted_at) {
+        return null;
+      }
       return article;
     } catch (error) {
       this.logger.error("Calling getAllArticle()", error, ArticleService.name);
@@ -58,7 +64,7 @@ export class ArticleService {
     }
   }
 
-  async createArticle(dto: ArticleAddDTO) {
+  async createArticle(file: Express.Multer.File, dto: ArticleAddDTO) {
     try {
       if (!dto.description) {
         dto.description = dto.content.slice(0, 100);
@@ -67,11 +73,16 @@ export class ArticleService {
         dto.publishedAt = new Date();
       }
       const category = await this.em.findOne(Category, dto.categoryID);
-      if (!category)
-        throw new NotFoundException(
-          `Can not find category with id: ${dto.categoryID}`
-        );
+      if (!category) throw new NotFoundException(`Category not found`);
       let article = plainToInstance(Article, dto);
+      article.id = uuidv4();
+      if (file) {
+        const photo: string = await this.awsService.bulkPutObject(
+          file,
+          `article/${article.id}`
+        );
+        article.imageURL = photo;
+      }
       article.id = uuidv4();
       article.category = category;
       article.created_at = new Date();
@@ -84,16 +95,26 @@ export class ArticleService {
     }
   }
 
-  async updateArticle(dto: ArticleUpdateDTO, id: string) {
+  async updateArticle(
+    file: Express.Multer.File,
+    dto: ArticleUpdateDTO,
+    id: string
+  ) {
     try {
       let article = await this.getArticleById(id);
-      if (!article)
-        throw new NotFoundException(`Can not find article with id: ${id}`);
+      if (!article) throw new NotFoundException(`Article not found`);
+      if (article.deleted_at) {
+        throw new NotFoundException(`Article not found`);
+      }
       const category = await this.em.findOne(Category, dto.categoryID);
-      if (!category)
-        throw new NotFoundException(
-          `Can not find category with id: ${dto.categoryID}`
+      if (!category) throw new NotFoundException(`Category not found`);
+      if (file) {
+        const photo: string = await this.awsService.bulkPutObject(
+          file,
+          `article/${article.id}`
         );
+        article.imageURL = photo;
+      }
       if (!dto.description) {
         article.description = dto.content.slice(0, 100);
       }
@@ -104,7 +125,6 @@ export class ArticleService {
       article.title = dto.title;
       article.content = dto.content;
       article.url = dto.url;
-      article.imageURL = dto.imageURL;
       article.category = category;
       article.updated_at = new Date();
       await this.em.persistAndFlush(article);
@@ -117,9 +137,9 @@ export class ArticleService {
   async deleteArticle(id: string) {
     try {
       let article = await this.articleRepository.findOne({ id: id });
-      if (!article)
-        throw new NotFoundException(`Can not find article with id: ${id}`);
-      await this.em.removeAndFlush(article);
+      if (!article) throw new NotFoundException(`Article not found`);
+      article.deleted_at = new Date();
+      await this.em.persistAndFlush(article);
     } catch (error) {
       this.logger.error("Calling deleteArticle()", error, ArticleService.name);
       throw error;

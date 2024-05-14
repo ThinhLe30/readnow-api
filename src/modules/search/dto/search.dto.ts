@@ -3,7 +3,7 @@ import { Exclude, Expose } from "class-transformer";
 import { CategoryDTO } from "src/modules/category/dtos/category.dto";
 
 @Exclude()
-export class ArticleDTO {
+export class SearchResultDTO {
   @ApiProperty()
   @Expose()
   id: string;
@@ -19,10 +19,6 @@ export class ArticleDTO {
   @ApiProperty()
   @Expose()
   description: string;
-
-  @ApiProperty()
-  @Expose()
-  url: string;
 
   @ApiProperty()
   @Expose()

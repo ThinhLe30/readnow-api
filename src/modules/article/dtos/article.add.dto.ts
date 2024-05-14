@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
-import { IsNotEmpty, IsUrl } from "class-validator";
+import { IsNotEmpty, IsUrl, isEmpty } from "class-validator";
 
 @Exclude()
 export class ArticleAddDTO {
@@ -24,16 +24,7 @@ export class ArticleAddDTO {
 
   @ApiProperty()
   @Expose()
-  @IsUrl()
   url?: string;
-
-  @ApiProperty()
-  @Expose()
-  @IsNotEmpty({
-    message: "article without imageURL",
-  })
-  @IsUrl()
-  imageURL!: string;
 
   @ApiProperty()
   @Expose()

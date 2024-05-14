@@ -196,47 +196,51 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "string"
         }
       },
       "name": "articles",
       "indexes": [
         {
+          "keyName": "articles_author_index",
           "columnNames": [
             "author"
           ],
           "composite": false,
-          "keyName": "articles_author_index",
           "primary": false,
-          "unique": false
+          "unique": false,
+          "type": "fulltext"
         },
         {
+          "keyName": "articles_title_index",
           "columnNames": [
             "title"
           ],
           "composite": false,
-          "keyName": "articles_title_index",
           "primary": false,
-          "unique": false
+          "unique": false,
+          "type": "fulltext"
         },
         {
+          "keyName": "articles_description_index",
           "columnNames": [
             "description"
           ],
           "composite": false,
-          "keyName": "articles_description_index",
           "primary": false,
-          "unique": false
+          "unique": false,
+          "type": "fulltext"
         },
         {
+          "keyName": "articles_content_index",
           "columnNames": [
             "content"
           ],
           "composite": false,
-          "keyName": "articles_content_index",
           "primary": false,
-          "unique": false
+          "unique": false,
+          "type": "fulltext"
         },
         {
           "keyName": "PRIMARY",
@@ -260,6 +264,7 @@
             "id"
           ],
           "referencedTableName": "categories",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       }

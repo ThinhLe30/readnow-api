@@ -24,16 +24,7 @@ export class ArticleUpdateDTO {
 
   @ApiProperty()
   @Expose()
-  @IsUrl()
   url?: string;
-
-  @ApiProperty()
-  @Expose()
-  @IsNotEmpty({
-    message: "article without imageURL",
-  })
-  @IsUrl()
-  imageURL!: string;
 
   @ApiProperty()
   @Expose()

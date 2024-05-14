@@ -13,15 +13,15 @@ import { Category } from "./category.entity";
 
 @Entity({ tableName: "articles" })
 export class Article extends BaseUUID {
-  @Index()
+  @Index({ type: "fulltext" })
   @Property({ nullable: false })
   author!: string;
 
-  @Index()
+  @Index({ type: "fulltext" })
   @Property({ nullable: false })
   title!: string;
 
-  @Index()
+  @Index({ type: "fulltext" })
   @Property({ nullable: false, columnType: "text" })
   description!: string;
 
@@ -31,7 +31,7 @@ export class Article extends BaseUUID {
   @Property({ nullable: false, columnType: "text" })
   imageURL!: string;
 
-  @Index()
+  @Index({ type: "fulltext" })
   @Property({ nullable: true, columnType: "longtext" })
   content!: string;
 
@@ -44,6 +44,11 @@ export class Article extends BaseUUID {
   @Property({ nullable: true })
   voteCount?: number;
 
-  @OneToOne({ unique: false })
+  @OneToOne({
+    unique: false,
+    nullable: true,
+    onDelete: "set null",
+    onUpdateIntegrity: "cascade",
+  })
   category: Category;
 }

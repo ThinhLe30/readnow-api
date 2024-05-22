@@ -6,17 +6,14 @@ import { IsNotEmpty, IsUrl } from "class-validator";
 export class ArticleUpdateDTO {
   @ApiProperty()
   @Expose()
-  @IsNotEmpty({
-    message: "article without author",
-  })
-  author!: string;
+  author?: string;
 
   @ApiProperty()
   @Expose()
   @IsNotEmpty({
     message: "article without title",
   })
-  title!: string;
+  title?: string;
 
   @ApiProperty()
   @Expose()
@@ -24,14 +21,7 @@ export class ArticleUpdateDTO {
 
   @ApiProperty()
   @Expose()
-  url?: string;
-
-  @ApiProperty()
-  @Expose()
-  @IsNotEmpty({
-    message: "article without content",
-  })
-  content!: string;
+  content?: string;
 
   @ApiProperty()
   @Expose()
@@ -39,8 +29,5 @@ export class ArticleUpdateDTO {
 
   @ApiProperty()
   @Expose()
-  @IsNotEmpty({
-    message: "article without category",
-  })
-  categoryID: string;
+  categoryID?: string;
 }

@@ -35,6 +35,9 @@ export class Article extends BaseUUID {
   @Property({ nullable: true, columnType: "longtext" })
   content!: string;
 
+  @Property({ nullable: true })
+  summary?: string;
+
   @Property({ nullable: false })
   publishedAt!: Date;
 

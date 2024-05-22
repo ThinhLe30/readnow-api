@@ -16,6 +16,8 @@ import {
   ApiResponseErrorCode,
   ApiResponseStatus,
 } from "src/common/enum/common.enum";
+import { ApiTags } from "@nestjs/swagger";
+@ApiTags("search")
 @Controller("search")
 export class SearchController {
   constructor(
@@ -61,9 +63,7 @@ export class SearchController {
       res.status(ApiResponseErrorCode.SUCCESS).json({
         status: ApiResponseStatus.SUCCESS,
         message: "Get articles successfully",
-        data: {
-          results,
-        },
+        data: results,
       });
     } catch (error) {
       this.logger.error(

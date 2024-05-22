@@ -162,6 +162,15 @@
           "nullable": true,
           "mappedType": "unknown"
         },
+        "summary": {
+          "name": "summary",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
         "published_at": {
           "name": "published_at",
           "type": "datetime",

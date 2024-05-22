@@ -86,6 +86,8 @@ export class ArticleService {
       article.id = uuidv4();
       article.category = category;
       article.created_at = new Date();
+      article.viewCount = 0;
+      article.voteCount = 0;
       article.updated_at = new Date();
       article.deleted_at = null;
       await this.em.persistAndFlush(article);
@@ -106,8 +108,12 @@ export class ArticleService {
       if (article.deleted_at) {
         throw new NotFoundException(`Article not found`);
       }
-      const category = await this.em.findOne(Category, dto.categoryID);
-      if (!category) throw new NotFoundException(`Category not found`);
+      if (dto.categoryID) {
+        const category = await this.em.findOne(Category, dto.categoryID);
+        if (!category) throw new NotFoundException(`Category not found`);
+        article.category = category;
+      }
+
       if (file) {
         const photo: string = await this.awsService.bulkPutObject(
           file,
@@ -115,17 +121,10 @@ export class ArticleService {
         );
         article.imageURL = photo;
       }
-      if (!dto.description) {
-        article.description = dto.content.slice(0, 100);
-      }
-      if (!dto.publishedAt) {
-        article.publishedAt = new Date();
-      }
+      article.description = dto.description;
       article.author = dto.author;
       article.title = dto.title;
       article.content = dto.content;
-      article.url = dto.url;
-      article.category = category;
       article.updated_at = new Date();
       await this.em.persistAndFlush(article);
     } catch (error) {

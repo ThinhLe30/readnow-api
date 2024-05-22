@@ -142,9 +142,14 @@ export class SearchService {
           },
         },
       ];
-      const articles = await this.articleRepository.find({
-        $and: [queryObjDate, { deleted_at: null }],
-      });
+      const articles = await this.articleRepository.find(
+        {
+          $and: [queryObjDate, { deleted_at: null }],
+        },
+        {
+          orderBy: { publishedAt: "DESC" },
+        }
+      );
       const resultDTOs = plainToInstance(SearchResultDTO, articles);
       resultDTOs.forEach((resultDTO) => {
         resultDTO.category = plainToInstance(CategoryDTO, resultDTO.category);

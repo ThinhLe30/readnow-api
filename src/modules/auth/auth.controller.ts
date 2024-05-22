@@ -17,13 +17,13 @@ import { Response } from "express";
 import { LoginDto } from "./dtos/LoginDto.dto";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 import { OAuth2Client } from "./google_client/google-client.config";
-import { ApiResponse } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { GoogleLoginTypeDTO } from "./swagger_types/GoogleLogin.dto";
 import { ApiResponseStatus } from "src/common/enum/common.enum";
 import { UsersService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { BasicLogin } from "./dtos/BasicLogin.dto";
-
+@ApiTags("auth")
 @Controller("auth")
 export class AuthController {
   constructor(

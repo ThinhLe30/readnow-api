@@ -1,32 +1,57 @@
-import { Entity, Enum, OneToOne, Property, Unique } from '@mikro-orm/core';
-import { IsEmail } from 'class-validator';
-import { Role } from '../common/enum/common.enum';
-import { BaseUUID } from './baseUUID.enity';
-import { Category } from './category.entity';
+import {
+  Entity,
+  Enum,
+  Index,
+  OneToOne,
+  Property,
+  Unique,
+} from "@mikro-orm/core";
+import { IsEmail } from "class-validator";
+import { Role } from "../common/enum/common.enum";
+import { BaseUUID } from "./baseUUID.enity";
+import { Category } from "./category.entity";
 
-@Entity({ tableName: 'articles' })
+@Entity({ tableName: "articles" })
 export class Article extends BaseUUID {
+  @Index({ type: "fulltext" })
   @Property({ nullable: false })
   author!: string;
 
+  @Index({ type: "fulltext" })
   @Property({ nullable: false })
   title!: string;
 
-  @Property({ nullable: false, columnType: 'text' })
+  @Index({ type: "fulltext" })
+  @Property({ nullable: false, columnType: "text" })
   description!: string;
 
-  @Property({ nullable: true, columnType: 'text' })
+  @Property({ nullable: true, columnType: "text" })
   url?: string;
 
-  @Property({ nullable: false, columnType: 'text' })
+  @Property({ nullable: false, columnType: "text" })
   imageURL!: string;
 
-  @Property({ nullable: true, columnType: 'longtext' })
+  @Index({ type: "fulltext" })
+  @Property({ nullable: true, columnType: "longtext" })
   content!: string;
+
+  @Property({ nullable: true })
+  summary?: string;
 
   @Property({ nullable: false })
   publishedAt!: Date;
 
-  @OneToOne()
-  category!: Category;
+  @Property({ nullable: true })
+  viewCount?: number;
+
+  @Property({ nullable: true })
+  voteCount?: number;
+
+  @OneToOne({
+    unique: false,
+    nullable: true,
+    onDelete: "set null",
+    onUpdateIntegrity: "cascade",
+  })
+  category: Category;
 }

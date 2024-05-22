@@ -1,32 +1,34 @@
-import { EntityManager, EntityRepository } from '@mikro-orm/mysql';
+import { EntityManager, EntityRepository } from "@mikro-orm/mysql";
 import {
   HttpException,
   HttpStatus,
   Inject,
   Injectable,
   Logger,
-} from '@nestjs/common';
-import { MailerService } from '@nest-modules/mailer';
-import { LoginDto } from './dtos/LoginDto.dto';
-import { JwtService } from '@nestjs/jwt';
-import { plainToInstance } from 'class-transformer';
-import { RegisterDto } from './dtos/RegisterDto.dto';
-import { UsersService } from '../users/users.service';
-import { UserRtnDto } from './dtos/UserRtnDto.dto';
-import { EmailDto } from './dtos/EmailDto.dto';
-import { CheckCodeDto } from './dtos/CheckCodeDto.dto';
-import { ResetPasswordDto } from './dtos/ResetPasswordDto.dto';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { User } from 'src/entities';
-import { IUserAuthen, IUserAuthenV2 } from './interfaces/auth-user.interface';
-import { UpdateUserDTO } from '../users/dtos/update-user.dto';
-import { UserFirebase } from './dtos/UserFirebase.dto';
-import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { randomUUID } from 'crypto';
-import { Role } from 'src/common/enum/common.enum';
-import { JWT_EXPIRATION_DAYS } from 'src/common/constants/common';
-import { use } from 'passport';
-import { RegisterRole } from './dtos/RegisterRole.dto';
+} from "@nestjs/common";
+import * as bcrypt from "bcrypt";
+import { MailerService } from "@nest-modules/mailer";
+import { LoginDto } from "./dtos/LoginDto.dto";
+import { JwtService } from "@nestjs/jwt";
+import { plainToInstance } from "class-transformer";
+import { RegisterDto } from "./dtos/RegisterDto.dto";
+import { UsersService } from "../users/users.service";
+import { UserRtnDto } from "./dtos/UserRtnDto.dto";
+import { EmailDto } from "./dtos/EmailDto.dto";
+import { CheckCodeDto } from "./dtos/CheckCodeDto.dto";
+import { ResetPasswordDto } from "./dtos/ResetPasswordDto.dto";
+import { InjectRepository } from "@mikro-orm/nestjs";
+import { User } from "src/entities";
+import { IUserAuthen, IUserAuthenV2 } from "./interfaces/auth-user.interface";
+import { UpdateUserDTO } from "../users/dtos/update-user.dto";
+import { UserFirebase } from "./dtos/UserFirebase.dto";
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { randomUUID } from "crypto";
+import { Role } from "src/common/enum/common.enum";
+import { JWT_EXPIRATION_DAYS } from "src/common/constants/common";
+import { use } from "passport";
+import { RegisterRole } from "./dtos/RegisterRole.dto";
+import { BasicLogin } from "./dtos/BasicLogin.dto";
 @Injectable()
 export class AuthService {
   constructor(
@@ -36,14 +38,14 @@ export class AuthService {
     private readonly mailerService: MailerService,
     @InjectRepository(User)
     private readonly userRepository: EntityRepository<User>,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
   async sendMail(
     email: string,
     code: string,
     name: string,
     template: string,
-    subject: string,
+    subject: string
   ) {
     try {
       await this.mailerService.sendMail({
@@ -64,7 +66,7 @@ export class AuthService {
     try {
       // Check if user exists
       const userDb = await this.userService.getUserByGoogleId(
-        firebaseUser.userId,
+        firebaseUser.userId
       );
 
       let userRtn: UserRtnDto;
@@ -87,7 +89,7 @@ export class AuthService {
       const accessToken = this.generateToken(userRtn);
       return accessToken;
     } catch (error) {
-      this.logger.error('Calling googleLogin()', error, AuthService.name);
+      this.logger.error("Calling googleLogin()", error, AuthService.name);
       throw error;
     }
   }
@@ -99,7 +101,7 @@ export class AuthService {
       });
       return accessToken;
     } catch (error) {
-      this.logger.error('Calling generateToken()', error, AuthService.name);
+      this.logger.error("Calling generateToken()", error, AuthService.name);
       throw error;
     }
   };
@@ -132,43 +134,36 @@ export class AuthService {
   //   }
   // }
 
-  // async validateLogin(loginDto: LoginDto) {
-  //   try {
-  //     const userDb = await this.getUserByEmail(loginDto.email);
-  //     if (!userDb)
-  //       throw new HttpException(
-  //         'Invalid email or password',
-  //         HttpStatus.BAD_REQUEST,
-  //       );
-  //     if (!userDb.verificationCode)
-  //       throw new HttpException(
-  //         'Email has not been verified',
-  //         HttpStatus.BAD_REQUEST,
-  //       );
-  //     if (userDb.status === UserStatus.DISABLED)
-  //       throw new HttpException('User are disabled', HttpStatus.BAD_REQUEST);
-  //     const isValidPass = await bcrypt.compare(
-  //       loginDto.password,
-  //       userDb.password,
-  //     );
-  //     const user: UserRtnDto = plainToInstance(UserRtnDto, userDb);
-  //     if (isValidPass) {
-  //       const accessToken = await this.jwtService.signAsync({
-  //         ...user,
-  //       });
-  //       return {
-  //         token: accessToken,
-  //       };
-  //     } else {
-  //       throw new HttpException(
-  //         'Invalid email or password',
-  //         HttpStatus.BAD_REQUEST,
-  //       );
-  //     }
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  async validateLogin(loginDto: BasicLogin) {
+    try {
+      const userDb = await this.getUserByEmail(loginDto.email);
+      if (!userDb)
+        throw new HttpException(
+          "Invalid email or password",
+          HttpStatus.BAD_REQUEST
+        );
+      const isValidPass = await bcrypt.compare(
+        loginDto.password,
+        userDb.password
+      );
+      const user: UserRtnDto = plainToInstance(UserRtnDto, userDb);
+      if (isValidPass) {
+        const accessToken = await this.jwtService.signAsync({
+          ...user,
+        });
+        return {
+          token: accessToken,
+        };
+      } else {
+        throw new HttpException(
+          "Invalid email or password",
+          HttpStatus.BAD_REQUEST
+        );
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 
   // checkIsRegister(userDb: User) {
   //   return userDb && userDb.status === UserStatus.REGISTING;
@@ -355,12 +350,12 @@ export class AuthService {
   //   return { verificationCode, verificationToken };
   // }
 
-  // async getUserByEmail(email: string) {
-  //   try {
-  //     const userDb = await this.userRepository.findOne({ email: email });
-  //     return userDb;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  async getUserByEmail(email: string) {
+    try {
+      const userDb = await this.userRepository.findOne({ email: email });
+      return userDb;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

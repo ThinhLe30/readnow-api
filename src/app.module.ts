@@ -21,6 +21,9 @@ import { AWSModule } from "./modules/aws/aws.module";
 import { PreauthMiddleware } from "./modules/auth/preauth.middleware";
 import { ArticleModule } from "./modules/article/article.module";
 import { CategoryModule } from "./modules/category/category.module";
+import { ArticleInteractModule } from "./modules/article_interact/article_interact.module";
+import { SearchService } from "./modules/search/search.service";
+import { SearchModule } from "./modules/search/search.module";
 
 @Module({
   imports: [
@@ -67,6 +70,8 @@ import { CategoryModule } from "./modules/category/category.module";
     AWSModule,
     ArticleModule,
     CategoryModule,
+    ArticleInteractModule,
+    SearchModule,
   ],
 
   controllers: [AppController],

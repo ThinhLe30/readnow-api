@@ -16,22 +16,16 @@ import { AuthService } from "./auth.service";
 import { Response } from "express";
 import { LoginDto } from "./dtos/LoginDto.dto";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
-import { OAuth2Client } from "./google_client/google-client.config";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { GoogleLoginTypeDTO } from "./swagger_types/GoogleLogin.dto";
 import { ApiResponseStatus } from "src/common/enum/common.enum";
-import { UsersService } from "../users/users.service";
-import { JwtService } from "@nestjs/jwt";
 import { BasicLogin } from "./dtos/BasicLogin.dto";
 @ApiTags("auth")
 @Controller("auth")
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UsersService,
-    private readonly jwtService: JwtService,
-    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-    private readonly oauth2Client: OAuth2Client
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
   @Post("login/google")

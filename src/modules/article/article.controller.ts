@@ -13,6 +13,7 @@ import {
   Req,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
   ValidationPipe,
 } from "@nestjs/common";
@@ -24,6 +25,7 @@ import { Response } from "express";
 import {
   ApiResponseErrorCode,
   ApiResponseStatus,
+  Role,
 } from "src/common/enum/common.enum";
 import { ArticleAddDTO } from "./dtos/article.add.dto";
 import { plainToInstance } from "class-transformer";
@@ -31,8 +33,11 @@ import { CategoryDTO } from "../category/dtos/category.dto";
 import { ArticleUpdateDTO } from "./dtos/article.update.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { fileFilter } from "./helpers/file-filter.helper";
+import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
+import { RoleAuthGuard } from "src/common/guards/role-auth.guard";
 @Controller("articles")
 @ApiTags("articles")
+@UseGuards(JwtAuthGuard)
 export class ArticleController {
   constructor(
     private readonly articleService: ArticleService,
@@ -40,6 +45,7 @@ export class ArticleController {
   ) {}
 
   // get all article
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Get()
   @ApiResponse({
     status: 200,
@@ -78,6 +84,7 @@ export class ArticleController {
   }
 
   // get article by id
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Get(":id")
   @ApiResponse({
     status: 200,
@@ -120,6 +127,7 @@ export class ArticleController {
   }
 
   // create article
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Post()
   @ApiResponse({
     status: 200,
@@ -152,6 +160,7 @@ export class ArticleController {
   }
 
   // update article
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Put(":id")
   @ApiResponse({
     status: 200,
@@ -185,6 +194,7 @@ export class ArticleController {
   }
 
   // delete article
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Delete(":id")
   @ApiResponse({
     status: 200,

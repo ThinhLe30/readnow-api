@@ -22,13 +22,15 @@ import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
   ApiResponseErrorCode,
   ApiResponseStatus,
+  Role,
 } from "src/common/enum/common.enum";
 import { UserRtnDto } from "../auth/dtos/UserRtnDto.dto";
 import { plainToInstance } from "class-transformer";
 import { AddUserBasicDTO } from "./dtos/AddUserBasic.dto";
 import { UserDTO } from "./dtos/user.dto";
+import { RoleAuthGuard } from "src/common/guards/role-auth.guard";
 
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @ApiTags("users")
 @Controller("users")
 export class UsersController {
@@ -61,6 +63,7 @@ export class UsersController {
   }
 
   // get all categories
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Get()
   @ApiResponse({
     status: 200,
@@ -90,6 +93,7 @@ export class UsersController {
   }
 
   // get user by id
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Get(":id")
   @ApiResponse({
     status: 200,
@@ -127,6 +131,7 @@ export class UsersController {
   }
 
   // create article
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Post()
   @ApiResponse({
     status: 200,
@@ -152,6 +157,7 @@ export class UsersController {
   }
 
   // delete category
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Delete(":id")
   @ApiResponse({
     status: 200,

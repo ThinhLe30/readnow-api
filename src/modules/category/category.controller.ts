@@ -12,6 +12,7 @@ import {
   Query,
   Req,
   Res,
+  UseGuards,
   ValidationPipe,
 } from "@nestjs/common";
 import { Response } from "express";
@@ -25,10 +26,14 @@ import { plainToInstance } from "class-transformer";
 import {
   ApiResponseErrorCode,
   ApiResponseStatus,
+  Role,
 } from "src/common/enum/common.enum";
+import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
+import { RoleAuthGuard } from "src/common/guards/role-auth.guard";
 
 @Controller("categories")
 @ApiTags("categories")
+@UseGuards(JwtAuthGuard)
 export class CategoryController {
   constructor(
     private readonly categoryService: CategoryService,
@@ -36,6 +41,7 @@ export class CategoryController {
   ) {}
 
   // get all categories
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Get()
   @ApiResponse({
     status: 200,
@@ -73,6 +79,7 @@ export class CategoryController {
   }
 
   // get category by id
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Get(":id")
   @ApiResponse({
     status: 200,
@@ -113,6 +120,7 @@ export class CategoryController {
   }
 
   // create category
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Post()
   @ApiResponse({
     status: 200,
@@ -142,6 +150,7 @@ export class CategoryController {
   }
 
   // update category
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Put(":id")
   @ApiResponse({
     status: 200,
@@ -172,6 +181,7 @@ export class CategoryController {
   }
 
   // delete category
+  @UseGuards(RoleAuthGuard([Role.ADMIN]))
   @Delete(":id")
   @ApiResponse({
     status: 200,

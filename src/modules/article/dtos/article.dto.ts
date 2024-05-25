@@ -42,9 +42,5 @@ export class ArticleDTO {
 
   @ApiProperty()
   @Expose()
-  voteCount: number;
-
-  @ApiProperty()
-  @Expose()
   category: CategoryDTO;
 }

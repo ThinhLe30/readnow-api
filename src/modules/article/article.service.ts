@@ -87,7 +87,6 @@ export class ArticleService {
       article.category = category;
       article.created_at = new Date();
       article.viewCount = 0;
-      article.voteCount = 0;
       article.updated_at = new Date();
       article.deleted_at = null;
       await this.em.persistAndFlush(article);

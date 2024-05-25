@@ -1,10 +1,11 @@
-import { EntityManager, EntityRepository } from "@mikro-orm/core";
+import { Check, EntityManager, EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 import { User } from "src/entities";
 import { Article } from "src/entities/article.entity";
 import { CheckList } from "src/entities/checklist.entity";
+import { Vote } from "src/entities/vote.entity";
 import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
@@ -13,48 +14,14 @@ export class ArticleInteractService {
     private readonly em: EntityManager,
     @InjectRepository(Article)
     private readonly articleRepository: EntityRepository<Article>,
+    @InjectRepository(User)
+    private readonly userRepository: EntityRepository<User>,
+    @InjectRepository(CheckList)
+    private readonly checklistRepository: EntityRepository<CheckList>,
+    @InjectRepository(Vote)
+    private readonly voteRepository: EntityRepository<Vote>,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
-  async voteArticle(articleID: string) {
-    try {
-      const article = await this.articleRepository.findOneOrFail({
-        id: articleID,
-      });
-      if (!article) {
-        throw new NotFoundException("Article not found");
-      }
-      article.voteCount += 1;
-      await this.em.persistAndFlush(article);
-    } catch (error) {
-      this.logger.error(
-        "Calling likeArticle()",
-        error,
-        ArticleInteractService.name
-      );
-      throw error;
-    }
-  }
-  async unVoteArticle(articleID: string) {
-    try {
-      const article = await this.articleRepository.findOneOrFail({
-        id: articleID,
-      });
-      if (!article) {
-        throw new NotFoundException("Article not found");
-      }
-      if (article.voteCount > 0) {
-        article.voteCount -= 1;
-        await this.em.persistAndFlush(article);
-      }
-    } catch (error) {
-      this.logger.error(
-        "Calling likeArticle()",
-        error,
-        ArticleInteractService.name
-      );
-      throw error;
-    }
-  }
 
   async viewArticle(articleID: string) {
     try {
@@ -81,21 +48,24 @@ export class ArticleInteractService {
       const article = await this.articleRepository.findOneOrFail({
         id: articleId,
       });
-      if (!article) {
-        throw new NotFoundException("Article not found");
+      const user = await this.userRepository.findOneOrFail({ id: loginId });
+
+      const checkListDb = await this.checklistRepository.findOne({
+        article: { id: articleId },
+        user: { id: loginId },
+      });
+      if (checkListDb) {
+        await this.em.removeAndFlush(checkListDb);
+      } else {
+        const checkList = new CheckList();
+        checkList.id = uuidv4();
+        checkList.article = article;
+        checkList.user = user;
+        checkList.created_at = new Date();
+        checkList.updated_at = new Date();
+        checkList.deleted_at = null;
+        await this.em.persistAndFlush(checkList);
       }
-      const user = await this.em.findOne(User, { id: loginId });
-      if (!user) {
-        throw new NotFoundException("User not found");
-      }
-      const checkList = new CheckList();
-      checkList.id = uuidv4();
-      checkList.article = article;
-      checkList.user = user;
-      checkList.created_at = new Date();
-      checkList.updated_at = new Date();
-      checkList.deleted_at = null;
-      await this.em.persistAndFlush(checkList);
     } catch (error) {
       this.logger.error(
         "Calling addChecklist()",
@@ -106,36 +76,32 @@ export class ArticleInteractService {
     }
   }
 
-  async removeChecklist(loginId: string, articleId: string) {
+  async addVote(loginId: string, articleId: string) {
     try {
       const article = await this.articleRepository.findOneOrFail({
         id: articleId,
       });
-      if (!article) {
-        throw new NotFoundException("Article not found");
+      const user = await this.userRepository.findOneOrFail({ id: loginId });
+
+      const voteDB = await this.voteRepository.findOne({
+        article: { id: articleId },
+        user: { id: loginId },
+      });
+      if (voteDB) {
+        await this.em.removeAndFlush(voteDB);
+      } else {
+        const vote = new Vote();
+        vote.id = uuidv4();
+        vote.article = article;
+        vote.user = user;
+        vote.created_at = new Date();
+        vote.updated_at = new Date();
+        vote.deleted_at = null;
+        await this.em.persistAndFlush(vote);
       }
-      const queryObj = {
-        $and: [
-          {
-            article: {
-              $and: [{ id: articleId }],
-            },
-          },
-          {
-            user: {
-              $and: [{ id: loginId }],
-            },
-          },
-        ],
-      };
-      const checklistDb = await this.em.findOne(CheckList, queryObj);
-      if (!checklistDb) {
-        throw new NotFoundException("Checklist not found");
-      }
-      await this.em.removeAndFlush(checklistDb);
     } catch (error) {
       this.logger.error(
-        "Calling removeChecklist()",
+        "Calling addChecklist()",
         error,
         ArticleInteractService.name
       );

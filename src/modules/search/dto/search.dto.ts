@@ -26,6 +26,10 @@ export class SearchResultDTO {
 
   @ApiProperty()
   @Expose()
+  summary: string;
+
+  @ApiProperty()
+  @Expose()
   content: string;
 
   @ApiProperty()
@@ -35,10 +39,6 @@ export class SearchResultDTO {
   @ApiProperty()
   @Expose()
   viewCount: number;
-
-  @ApiProperty()
-  @Expose()
-  voteCount: number;
 
   @ApiProperty()
   @Expose()

@@ -35,7 +35,7 @@ export class Article extends BaseUUID {
   @Property({ nullable: true, columnType: "longtext" })
   content!: string;
 
-  @Property({ nullable: true })
+  @Property({ nullable: false, columnType: "text" })
   summary?: string;
 
   @Property({ nullable: false })
@@ -43,9 +43,6 @@ export class Article extends BaseUUID {
 
   @Property({ nullable: true })
   viewCount?: number;
-
-  @Property({ nullable: true })
-  voteCount?: number;
 
   @OneToOne({
     unique: false,

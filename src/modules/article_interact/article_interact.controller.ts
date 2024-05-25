@@ -32,60 +32,6 @@ export class ArticleInteractController {
   ) {}
 
   @UseGuards(RoleAuthGuard([Role.ADMIN, Role.USER]))
-  @Post("vote/:id")
-  async voteArticle(
-    @Res() res: Response,
-    @Req() req,
-    @Param("id", ParseUUIDPipe) articleID: string
-  ) {
-    try {
-      await this.articleInteractService.voteArticle(articleID);
-      res.status(ApiResponseErrorCode.SUCCESS).json({
-        status: ApiResponseStatus.SUCCESS,
-        message: "Vote article successfully!",
-      });
-      // some code here
-    } catch (error) {
-      this.logger.error(
-        "Calling voteArticle()",
-        error,
-        ArticleInteractController.name
-      );
-      res.status(error.status).json({
-        status: ApiResponseStatus.FAILURE,
-        message: error.message,
-      });
-    }
-  }
-
-  @UseGuards(RoleAuthGuard([Role.ADMIN, Role.USER]))
-  @Post("un-vote/:id")
-  async unvoteArticle(
-    @Res() res: Response,
-    @Req() req,
-    @Param("id", ParseUUIDPipe) articleID: string
-  ) {
-    try {
-      await this.articleInteractService.unVoteArticle(articleID);
-      res.status(ApiResponseErrorCode.SUCCESS).json({
-        status: ApiResponseStatus.SUCCESS,
-        message: "Un-vote article successfully!",
-      });
-      // some code here
-    } catch (error) {
-      this.logger.error(
-        "Calling unvoteArticle()",
-        error,
-        ArticleInteractController.name
-      );
-      res.status(error.status).json({
-        status: ApiResponseStatus.FAILURE,
-        message: error.message,
-      });
-    }
-  }
-
-  @UseGuards(RoleAuthGuard([Role.ADMIN, Role.USER]))
   @Post("view/:id")
   async viewArticle(
     @Res() res: Response,
@@ -113,7 +59,7 @@ export class ArticleInteractController {
   }
 
   @UseGuards(RoleAuthGuard([Role.ADMIN, Role.USER]))
-  @Post("checklist/:id/add")
+  @Post("checklist/:id")
   async addChecklist(
     @Res() res: Response,
     @Req() req,
@@ -124,7 +70,7 @@ export class ArticleInteractController {
       await this.articleInteractService.addChecklist(idLogined, articleID);
       res.status(ApiResponseErrorCode.SUCCESS).json({
         status: ApiResponseStatus.SUCCESS,
-        message: "Add checklist successfully!",
+        message: "Add/Remove checklist successfully!",
       });
       // some code here
     } catch (error) {
@@ -139,24 +85,24 @@ export class ArticleInteractController {
       });
     }
   }
-
-  @Delete("checklist/:id/remove")
-  async removeChecklist(
+  @UseGuards(RoleAuthGuard([Role.ADMIN, Role.USER]))
+  @Post("vote/:id")
+  async addVote(
     @Res() res: Response,
     @Req() req,
     @Param("id", ParseUUIDPipe) articleID: string
   ) {
     try {
-      // some code here
       const idLogined = req.user.id;
-      await this.articleInteractService.removeChecklist(idLogined, articleID);
+      await this.articleInteractService.addVote(idLogined, articleID);
       res.status(ApiResponseErrorCode.SUCCESS).json({
         status: ApiResponseStatus.SUCCESS,
-        message: "Remove checklist successfully!",
+        message: "Add/Remove vote successfully!",
       });
+      // some code here
     } catch (error) {
       this.logger.error(
-        "Calling removeChecklist()",
+        "Calling addVote()",
         error,
         ArticleInteractController.name
       );

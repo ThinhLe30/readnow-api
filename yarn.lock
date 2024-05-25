@@ -1840,13 +1840,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikro-orm/cli@npm:^5.7.13":
-  version: 5.7.13
-  resolution: "@mikro-orm/cli@npm:5.7.13"
+"@mikro-orm/cli@npm:^5.9.8":
+  version: 5.9.8
+  resolution: "@mikro-orm/cli@npm:5.9.8"
   dependencies:
     "@jercle/yargonaut": 1.1.5
-    "@mikro-orm/core": ~5.7.13
-    "@mikro-orm/knex": ~5.7.13
+    "@mikro-orm/core": 5.9.8
+    "@mikro-orm/knex": 5.9.8
     fs-extra: 11.1.1
     tsconfig-paths: 4.2.0
     yargs: 17.7.2
@@ -1885,20 +1885,20 @@ __metadata:
   bin:
     mikro-orm: cli.js
     mikro-orm-esm: esm.js
-  checksum: f5411da6b6bfbcbc2288bb9ba30ed4a1665299275addbf8472d5dd152ba012f7192a5908f6e6bc16504e567be95dcc9ebda62170cac6e13ba263eaeb0cdfe936
+  checksum: 8c09095f30d40d021b0c8664925e0e7828a353f5a8abc1a0510ea2c2dee401f266f3ba5bd3eb1693d9885fe3ad774b9ca9604811e58ce580828faa3b5c953a9b
   languageName: node
   linkType: hard
 
-"@mikro-orm/core@npm:^5.7.13, @mikro-orm/core@npm:~5.7.13":
-  version: 5.7.13
-  resolution: "@mikro-orm/core@npm:5.7.13"
+"@mikro-orm/core@npm:5.9.8, @mikro-orm/core@npm:^5.9.8":
+  version: 5.9.8
+  resolution: "@mikro-orm/core@npm:5.9.8"
   dependencies:
     acorn-loose: 8.3.0
     acorn-walk: 8.2.0
     dotenv: 16.3.1
     fs-extra: 11.1.1
     globby: 11.1.0
-    mikro-orm: ~5.7.13
+    mikro-orm: 5.9.8
     reflect-metadata: 0.1.13
   peerDependencies:
     "@mikro-orm/better-sqlite": ^5.0.0
@@ -1932,13 +1932,13 @@ __metadata:
       optional: true
     "@mikro-orm/sqlite":
       optional: true
-  checksum: 77bf1b3ed419710795b9f19098cbd0ebc8dd994897c9e56741a7ea7ac5ab7013f6ac4da1a70fb3729b1126156a79b22b1cbb1446bc7f99ff11bb32abcee4e80d
+  checksum: 6f739d84d0df415602d9a666eda91336694438a558f9f84c9a7e5ea112bdb693ced48ff6177a2e81b5ff7a2c81c2f301e9a06093b399ca30b06136618015756d
   languageName: node
   linkType: hard
 
-"@mikro-orm/knex@npm:~5.7.13":
-  version: 5.7.13
-  resolution: "@mikro-orm/knex@npm:5.7.13"
+"@mikro-orm/knex@npm:5.9.8":
+  version: 5.9.8
+  resolution: "@mikro-orm/knex@npm:5.9.8"
   dependencies:
     fs-extra: 11.1.1
     knex: 2.5.1
@@ -1970,30 +1970,30 @@ __metadata:
       optional: true
     sqlite3:
       optional: true
-  checksum: f1637b5db4ffb3496a30b94072f286bde672b12f80292f9ed84cc7926620f99bcaef8bd63dc70b0fdfa449a6d8f44a0dfb81f4478128cd9a281feeac3be28487
+  checksum: 5b6b326ef61fc1b271af2a539d0f138a2abf1aca29ee20a639c55ce7f8c4988af4d22ff9d380a38dac6f9091614413fa4c656ba2e6f5ee3c459fbc0b76d16411
   languageName: node
   linkType: hard
 
-"@mikro-orm/migrations@npm:^5.7.13":
-  version: 5.7.13
-  resolution: "@mikro-orm/migrations@npm:5.7.13"
+"@mikro-orm/migrations@npm:^5.9.8":
+  version: 5.9.8
+  resolution: "@mikro-orm/migrations@npm:5.9.8"
   dependencies:
-    "@mikro-orm/knex": ~5.7.13
+    "@mikro-orm/knex": 5.9.8
     fs-extra: 11.1.1
     knex: 2.5.1
-    umzug: 3.2.1
+    umzug: 3.3.1
   peerDependencies:
     "@mikro-orm/core": ^5.0.0
-  checksum: c794252fccd4d9695f8c3738ef061433c43ed02a9f505ff0b6b22cf7475d66da45423519f7bd7fe9626eb52d35fbb18debe32e879d8205d1f973ef92a9c69b10
+  checksum: fad1770732e8f6f8984caaac7e19e4b169e0c52fb0db6464c5b6c39422da81258b621c6ccc98c19383cc1790b955a0ace6c161e8b1bfe8bdb81a91cd83d6c3a2
   languageName: node
   linkType: hard
 
-"@mikro-orm/mysql@npm:^5.7.13":
-  version: 5.7.13
-  resolution: "@mikro-orm/mysql@npm:5.7.13"
+"@mikro-orm/mysql@npm:^5.9.8":
+  version: 5.9.8
+  resolution: "@mikro-orm/mysql@npm:5.9.8"
   dependencies:
-    "@mikro-orm/knex": ~5.7.13
-    mysql2: 3.5.1
+    "@mikro-orm/knex": 5.9.8
+    mysql2: 3.6.2
   peerDependencies:
     "@mikro-orm/core": ^5.0.0
     "@mikro-orm/entity-generator": ^5.0.0
@@ -2006,7 +2006,7 @@ __metadata:
       optional: true
     "@mikro-orm/seeder":
       optional: true
-  checksum: b4459b6bc45229562b745e42744e88ce94d3aa7d87e7829162f2c44fe3bcc70a57060f0bc5ce187bb753b995337b2faecf36fc71ffd39a52c56ca08cb497867b
+  checksum: 0fea8cf0af77fef2a7b3b0d61c512cc3c4075645f22067e526707a52117180321985a45ef0936dea22cd3d8d97416c88bc4d369545506d52b2a2baaab6c5dd24
   languageName: node
   linkType: hard
 
@@ -2021,16 +2021,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikro-orm/seeder@npm:5.7.13":
-  version: 5.7.13
-  resolution: "@mikro-orm/seeder@npm:5.7.13"
+"@mikro-orm/seeder@npm:5.9.8":
+  version: 5.9.8
+  resolution: "@mikro-orm/seeder@npm:5.9.8"
   dependencies:
     "@faker-js/faker": 7.6.0
     fs-extra: 11.1.1
     globby: 11.1.0
   peerDependencies:
     "@mikro-orm/core": ^5.0.0
-  checksum: bb640b6d6abfcfc0d3b65d0cd20020475487be19602ee665b488bf6b609135570020423f932bd880a194d28d7cfc66ed1c94d3635cd671c49ea9275dc5e2c75a
+  checksum: af0c9c0cffb29f26a2954f3de17c11e21d0940f8b2cd15221055c5f82315c8b47a6bf2f75c8f60a70c61afe340f6a391be076ec6693abd03a5ea721e6786a284
   languageName: node
   linkType: hard
 
@@ -5579,14 +5579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"emittery@npm:^0.12.1":
-  version: 0.12.1
-  resolution: "emittery@npm:0.12.1"
-  checksum: 64ad8f2c498be09449b232730d07044976ef2662aa891e9ecfb956d70fc1c39a46aa66adb70f2d2a097059c5f923408723f2ec1778b86360268591b403348c1c
-  languageName: node
-  linkType: hard
-
-"emittery@npm:^0.13.1":
+"emittery@npm:^0.13.0, emittery@npm:^0.13.1":
   version: 0.13.1
   resolution: "emittery@npm:0.13.1"
   checksum: 2b089ab6306f38feaabf4f6f02792f9ec85fc054fda79f44f6790e61bbf6bc4e1616afb9b232e0c5ec5289a8a452f79bfa6d905a6fd64e94b49981f0934001c6
@@ -6512,16 +6505,6 @@ __metadata:
     jsonfile: ^4.0.0
     universalify: ^0.1.0
   checksum: bf44f0e6cea59d5ce071bba4c43ca76d216f89e402dc6285c128abc0902e9b8525135aa808adad72c9d5d218e9f4bcc63962815529ff2f684ad532172a284880
-  languageName: node
-  linkType: hard
-
-"fs-jetpack@npm:^4.3.1":
-  version: 4.3.1
-  resolution: "fs-jetpack@npm:4.3.1"
-  dependencies:
-    minimatch: ^3.0.2
-    rimraf: ^2.6.3
-  checksum: ffe90946ec250c6042569faa2ec7753594779ca0e8a72eea0b76b82574542c50d580974f54c5d6885f44f5719ece173be778cf82dc50ad90f43dab043f4061c9
   languageName: node
   linkType: hard
 
@@ -9011,10 +8994,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mikro-orm@npm:~5.7.13":
-  version: 5.7.13
-  resolution: "mikro-orm@npm:5.7.13"
-  checksum: ef0853fff71d31c930ca376f1eb9e5fdc45035ef50e5bead5b8477952764766d5c48198b5e99f36ee9ba5600edb2ec4ccf6869f885b688267699ede681eaab05
+"mikro-orm@npm:5.9.8":
+  version: 5.9.8
+  resolution: "mikro-orm@npm:5.9.8"
+  checksum: ccc6a2f0c38a5fe1342f05f51218f2876584193b39fba5758bd0b6c4de0f55a443f797fc8ea437c7e06a5871e61f47d106beb6ea1e387d4152b52eca6a92d086
   languageName: node
   linkType: hard
 
@@ -9075,7 +9058,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^3.0.2, minimatch@npm:^3.0.4, minimatch@npm:^3.0.5, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
+"minimatch@npm:^3.0.4, minimatch@npm:^3.0.5, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
   version: 3.1.2
   resolution: "minimatch@npm:3.1.2"
   dependencies:
@@ -9306,9 +9289,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mysql2@npm:3.5.1":
-  version: 3.5.1
-  resolution: "mysql2@npm:3.5.1"
+"mysql2@npm:3.6.2":
+  version: 3.6.2
+  resolution: "mysql2@npm:3.6.2"
   dependencies:
     denque: ^2.1.0
     generate-function: ^2.3.1
@@ -9318,7 +9301,7 @@ __metadata:
     named-placeholders: ^1.1.3
     seq-queue: ^0.0.5
     sqlstring: ^2.3.2
-  checksum: 93c88c88ae374504dc07e5ac1370e74f86f560962d41f7e674a933110167d01023e02947199f6d0be06e75a234c3c19bc9ada8db449a9ebddd928e11357891d3
+  checksum: 819d7649536db477511236ea9597062ddb5ec2f60127132239b93b1c4bf7a2af182893f0eabc2a4b2c9c4f6eb1770b6e93a7d0a7f9739ae339480b6c8c608a14
   languageName: node
   linkType: hard
 
@@ -9970,10 +9953,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pony-cause@npm:^2.1.2":
-  version: 2.1.10
-  resolution: "pony-cause@npm:2.1.10"
-  checksum: 8b61378f213e61056312dc274a1c79980154e9d864f6ad86e0c8b91a50d3ce900d430995ee24147c9f3caa440dfe7d51c274b488d7f033b65b206522536d7217
+"pony-cause@npm:^2.1.4":
+  version: 2.1.11
+  resolution: "pony-cause@npm:2.1.11"
+  checksum: 4aaa9ddab8f8225b5cbb32f7329a71b73679074579fa91f9e9d6853d398f3c2872de979519e1525c0c91d53afc82c32fddb76e379d19157e69ef1f7064523dfa
   languageName: node
   linkType: hard
 
@@ -10335,12 +10318,12 @@ __metadata:
   dependencies:
     "@aws-sdk/client-s3": ^3.414.0
     "@faker-js/faker": ^8.1.0
-    "@mikro-orm/cli": ^5.7.13
-    "@mikro-orm/core": ^5.7.13
-    "@mikro-orm/migrations": ^5.7.13
-    "@mikro-orm/mysql": ^5.7.13
+    "@mikro-orm/cli": ^5.9.8
+    "@mikro-orm/core": ^5.9.8
+    "@mikro-orm/migrations": ^5.9.8
+    "@mikro-orm/mysql": ^5.9.8
     "@mikro-orm/nestjs": ^5.2.0
-    "@mikro-orm/seeder": 5.7.13
+    "@mikro-orm/seeder": 5.9.8
     "@nest-modules/mailer": ^1.3.22
     "@nestjs/cli": ^10.0.0
     "@nestjs/common": ^10.0.0
@@ -10734,17 +10717,6 @@ __metadata:
   bin:
     rimraf: dist/cjs/src/bin.js
   checksum: b786adc02651e2e24bbedb04bbdea80652fc9612632931ff2d9f898c5e4708fe30956186597373c568bd5230a4dc2fadfc816ccacba8a1daded3a006a6b74f1a
-  languageName: node
-  linkType: hard
-
-"rimraf@npm:^2.6.3":
-  version: 2.7.1
-  resolution: "rimraf@npm:2.7.1"
-  dependencies:
-    glob: ^7.1.3
-  bin:
-    rimraf: ./bin.js
-  checksum: cdc7f6eacb17927f2a075117a823e1c5951792c6498ebcce81ca8203454a811d4cf8900314154d3259bb8f0b42ab17f67396a8694a54cae3283326e57ad250cd
   languageName: node
   linkType: hard
 
@@ -11899,10 +11871,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^2.18.0":
-  version: 2.19.0
-  resolution: "type-fest@npm:2.19.0"
-  checksum: a4ef07ece297c9fba78fc1bd6d85dff4472fe043ede98bd4710d2615d15776902b595abf62bd78339ed6278f021235fb28a96361f8be86ed754f778973a0d278
+"type-fest@npm:^3.0.0":
+  version: 3.13.1
+  resolution: "type-fest@npm:3.13.1"
+  checksum: c06b0901d54391dc46de3802375f5579868949d71f93b425ce564e19a428a0d411ae8d8cb0e300d330071d86152c3ea86e744c3f2860a42a79585b6ec2fdae8e
   languageName: node
   linkType: hard
 
@@ -12004,17 +11976,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"umzug@npm:3.2.1":
-  version: 3.2.1
-  resolution: "umzug@npm:3.2.1"
+"umzug@npm:3.3.1":
+  version: 3.3.1
+  resolution: "umzug@npm:3.3.1"
   dependencies:
     "@rushstack/ts-command-line": ^4.12.2
-    emittery: ^0.12.1
-    fs-jetpack: ^4.3.1
+    emittery: ^0.13.0
     glob: ^8.0.3
-    pony-cause: ^2.1.2
-    type-fest: ^2.18.0
-  checksum: 8b118345cf4a9faedfaf2d169deb9a630ff630719c684070d02d0f55b8eb4b8f4b03648d6ff7ff03de03ce2650f05b7dde88c2b4f564b279af153c92e1739f38
+    pony-cause: ^2.1.4
+    type-fest: ^3.0.0
+  checksum: 3a6ce3dca1de1178e46484641cd306fc06bfa8c1313bd2b8e475458c69e11782fd1ea1974b363563ce09af2deca32ac29055949fd1a66713db8222ea490cdf62
   languageName: node
   linkType: hard
 

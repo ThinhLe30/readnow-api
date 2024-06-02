@@ -14,7 +14,6 @@ import {
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Response } from "express";
-import { LoginDto } from "./dtos/LoginDto.dto";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { GoogleLoginTypeDTO } from "./swagger_types/GoogleLogin.dto";
@@ -34,11 +33,7 @@ export class AuthController {
     status: 200,
     type: GoogleLoginTypeDTO,
   })
-  async googleLogin(
-    @Res() res: Response,
-    @Req() req,
-    @Body() loginDto: LoginDto
-  ) {
+  async googleLogin(@Res() res: Response, @Req() req) {
     try {
       const firebaseInfo = req.firebaseUser;
       console.log(firebaseInfo);

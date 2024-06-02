@@ -21,6 +21,7 @@ import { ArticleModule } from "./modules/article/article.module";
 import { CategoryModule } from "./modules/category/category.module";
 import { ArticleInteractModule } from "./modules/article_interact/article_interact.module";
 import { SearchModule } from "./modules/search/search.module";
+import { ChecklistModule } from "./modules/checklist/checklist.module";
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { SearchModule } from "./modules/search/search.module";
     CategoryModule,
     ArticleInteractModule,
     SearchModule,
+    ChecklistModule,
   ],
 
   controllers: [AppController],

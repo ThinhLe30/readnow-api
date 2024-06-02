@@ -6,6 +6,10 @@ import { Role } from "src/common/enum/common.enum";
 export class UserDTO {
   @ApiProperty()
   @Expose()
+  id: string;
+
+  @ApiProperty()
+  @Expose()
   email: string;
 
   @ApiProperty()

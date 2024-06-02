@@ -10,22 +10,31 @@ import Decimal from "decimal.js";
 import { SearchResultDTO } from "./dto/search.dto";
 import { plainToClass, plainToInstance } from "class-transformer";
 import { CategoryDTO } from "../category/dtos/category.dto";
-import { MAX_RECENT_ARTICLES_DATE } from "src/common/constants/common";
+import {
+  MAX_RECENT_ARTICLES_DATE,
+  MAX_TRENDING_ARTICLES,
+} from "src/common/constants/common";
+import { CheckList } from "src/entities/checklist.entity";
 @Injectable()
 export class SearchService {
   constructor(
     private readonly em: EntityManager,
     @InjectRepository(Article)
     private readonly articleRepository: EntityRepository<Article>,
+    @InjectRepository(CheckList)
+    private readonly checklistRepository: EntityRepository<CheckList>,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
-  async searchArticle(searchDTO: SearchDTO) {
+  async searchArticle(searchDTO: SearchDTO, loginID: string) {
     try {
       if (!searchDTO.keyword) {
         searchDTO.keyword = "";
       }
       if (!searchDTO.toDate) {
         searchDTO.toDate = new Date();
+      }
+      if (!searchDTO.categories) {
+        searchDTO.categories = [];
       }
       const ftsearchQR = { $like: `%${searchDTO.keyword}%` };
       const queryObj = {};
@@ -52,8 +61,10 @@ export class SearchService {
           ],
         },
       ];
+
       const queryObjCategories = {};
-      if (searchDTO.categories) {
+      console.log(searchDTO.categories);
+      if (searchDTO.categories.length > 0) {
         queryObjCategories["$and"] = [
           {
             category: {
@@ -109,15 +120,29 @@ export class SearchService {
       });
       const numberOfPage = new Decimal(total).div(limit).ceil().d[0];
       const resultDTOs = plainToInstance(SearchResultDTO, articles);
+      let articleCheckList = [];
+      if (loginID) {
+        const res = await this.checklistRepository.find({
+          user: { id: loginID },
+        });
+        articleCheckList = res.map((el) => el.article.id);
+      }
       resultDTOs.forEach((resultDTO) => {
+        if (articleCheckList.includes(resultDTO.id)) {
+          resultDTO.isChecked = true;
+        } else {
+          resultDTO.isChecked = false;
+        }
         resultDTO.category = plainToInstance(CategoryDTO, resultDTO.category);
       });
       const currentPage = Number(searchDTO.page >= 1 ? searchDTO.page : 1);
+      const nextPage = currentPage + 1 <= numberOfPage ? currentPage + 1 : null;
       return {
         articles: resultDTOs,
         metadata: {
           total: total,
           currentPage: currentPage,
+          nextPage: nextPage,
           numberOfPage: numberOfPage,
         },
       };
@@ -148,6 +173,32 @@ export class SearchService {
         },
         {
           orderBy: { publishedAt: "DESC" },
+        }
+      );
+      const resultDTOs = plainToInstance(SearchResultDTO, articles);
+      resultDTOs.forEach((resultDTO) => {
+        resultDTO.category = plainToInstance(CategoryDTO, resultDTO.category);
+      });
+      return resultDTOs;
+    } catch (error) {
+      this.logger.error(
+        "Calling getRecentArticle()",
+        error,
+        SearchService.name
+      );
+      throw error;
+    }
+  }
+
+  async getTrendingArticle() {
+    try {
+      const articles = await this.articleRepository.find(
+        {
+          $and: [{ deleted_at: null }],
+        },
+        {
+          orderBy: { publishedAt: "DESC", viewCount: "DESC" },
+          limit: MAX_TRENDING_ARTICLES,
         }
       );
       const resultDTOs = plainToInstance(SearchResultDTO, articles);

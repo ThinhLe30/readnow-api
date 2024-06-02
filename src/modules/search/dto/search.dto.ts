@@ -42,5 +42,9 @@ export class SearchResultDTO {
 
   @ApiProperty()
   @Expose()
+  isChecked: boolean = false;
+
+  @ApiProperty()
+  @Expose()
   category: CategoryDTO;
 }

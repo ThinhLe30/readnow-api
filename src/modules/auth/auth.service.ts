@@ -18,6 +18,7 @@ import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 import { randomUUID } from "crypto";
 import { Role } from "src/common/enum/common.enum";
 import { BasicLogin } from "./dtos/BasicLogin.dto";
+import { GoogleLogin } from "./dtos/GoogleLogin.dto";
 @Injectable()
 export class AuthService {
   constructor(
@@ -45,6 +46,34 @@ export class AuthService {
         user.name = firebaseUser.name;
         user.role = Role.USER;
         user.photo = firebaseUser.picture;
+        this.userRepository.persist(user).flush();
+        userRtn = plainToInstance(UserRtnDto, user);
+      } else {
+        // Generate token
+        userRtn = plainToInstance(UserRtnDto, userDb);
+      }
+      const accessToken = this.generateToken(userRtn);
+      return accessToken;
+    } catch (error) {
+      this.logger.error("Calling googleLogin()", error, AuthService.name);
+      throw error;
+    }
+  }
+
+  async googleLoginV2(dto: GoogleLogin): Promise<string> {
+    try {
+      let userRtn: UserRtnDto;
+      const userDb = await this.userService.getUserByEmail(dto.email);
+      if (userDb == null) {
+        // Insert user to db
+        const user = new User();
+        // generate uuid
+        user.id = randomUUID();
+        user.authId = dto.authID;
+        user.email = dto.email;
+        user.name = dto.name;
+        user.role = Role.USER;
+        user.photo = dto.photo;
         this.userRepository.persist(user).flush();
         userRtn = plainToInstance(UserRtnDto, user);
       } else {

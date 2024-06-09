@@ -19,6 +19,7 @@ import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { GoogleLoginTypeDTO } from "./swagger_types/GoogleLogin.dto";
 import { ApiResponseStatus } from "src/common/enum/common.enum";
 import { BasicLogin } from "./dtos/BasicLogin.dto";
+import { GoogleLogin } from "./dtos/GoogleLogin.dto";
 @ApiTags("auth")
 @Controller("auth")
 export class AuthController {
@@ -42,6 +43,32 @@ export class AuthController {
       }
 
       const accessToken = await this.authService.googleLogin(firebaseInfo);
+      console.log(accessToken);
+      res.status(200).json({
+        message: "Login Successfully",
+        status: ApiResponseStatus.SUCCESS,
+        token: accessToken,
+      });
+    } catch (error) {
+      this.logger.error("Calling login()", error, AuthController.name);
+      throw error;
+    }
+  }
+
+  @Post("login/google/v2")
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
+  @ApiResponse({
+    status: 200,
+    type: GoogleLoginTypeDTO,
+  })
+  async googleLoginV2(
+    @Res() res: Response,
+    @Req() req,
+    @Body() loginDto: GoogleLogin
+  ) {
+    try {
+      const accessToken = await this.authService.googleLoginV2(loginDto);
       console.log(accessToken);
       res.status(200).json({
         message: "Login Successfully",

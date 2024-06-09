@@ -1,6 +1,4 @@
-import { Entity, Enum, ManyToOne, Property, Unique } from "@mikro-orm/core";
-import { IsEmail } from "class-validator";
-import { Role } from "../common/enum/common.enum";
+import { Entity, ManyToOne } from "@mikro-orm/core";
 import { BaseUUID } from "./baseUUID.enity";
 import { Article } from "./article.entity";
 import { User } from "./user.entity";

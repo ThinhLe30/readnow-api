@@ -9,9 +9,12 @@ import { Category } from "src/entities/category.entity";
 import { v4 as uuidv4 } from "uuid";
 import { ArticleUpdateDTO } from "./dtos/article.update.dto";
 import { AWSService } from "../aws/aws.service";
+import axios from "axios";
+import { ConfigService } from "@nestjs/config";
 @Injectable()
 export class ArticleService {
   constructor(
+    private readonly configService: ConfigService,
     private readonly awsService: AWSService,
     private readonly em: EntityManager,
     @InjectRepository(Article)
@@ -76,6 +79,10 @@ export class ArticleService {
       if (!category) throw new NotFoundException(`Category not found`);
       let article = plainToInstance(Article, dto);
       article.id = uuidv4();
+      // call api to AI server and set summary to article.summary
+      const summary = await this.getSummaryFromAI(dto.content);
+      article.summary = summary;
+
       if (file) {
         const photo: string = await this.awsService.bulkPutObject(
           file,
@@ -112,6 +119,8 @@ export class ArticleService {
         if (!category) throw new NotFoundException(`Category not found`);
         article.category = category;
       }
+      const summary = await this.getSummaryFromAI(dto.content);
+      article.summary = summary;
 
       if (file) {
         const photo: string = await this.awsService.bulkPutObject(
@@ -141,6 +150,23 @@ export class ArticleService {
     } catch (error) {
       this.logger.error("Calling deleteArticle()", error, ArticleService.name);
       throw error;
+    }
+  }
+
+  private async getSummaryFromAI(content: string): Promise<string> {
+    try {
+      const aiServerUrl = this.configService.get<string>("AI_SERVER_URL");
+      const response = await axios.post(
+        aiServerUrl + "/summary",
+        {
+          text: content,
+        },
+        { timeout: 10000 }
+      );
+      return response.data.summary;
+    } catch (error) {
+      this.logger.error("Error calling AI server for summary", error);
+      return "";
     }
   }
 }

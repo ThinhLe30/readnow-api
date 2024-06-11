@@ -156,6 +156,9 @@ export class ArticleService {
   private async getSummaryFromAI(content: string): Promise<string> {
     try {
       const aiServerUrl = this.configService.get<string>("AI_SERVER_URL");
+      if (!aiServerUrl) {
+        return "";
+      }
       const response = await axios.post(
         aiServerUrl + "/summary",
         {

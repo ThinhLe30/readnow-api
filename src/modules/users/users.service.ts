@@ -9,6 +9,8 @@ import { UserDTO } from "./dtos/user.dto";
 import { plainToInstance } from "class-transformer";
 import { AddUserBasicDTO } from "./dtos/AddUserBasic.dto";
 import { Role } from "src/common/enum/common.enum";
+import { v4 as uuidv4 } from "uuid";
+import { faker } from "@faker-js/faker";
 
 @Injectable()
 export class UsersService {
@@ -86,10 +88,12 @@ export class UsersService {
   async createUser(user: AddUserBasicDTO) {
     try {
       const newUser = new User();
+      newUser.id = uuidv4();
       newUser.email = user.email;
       newUser.password = await this.hashPassword(user.password);
       newUser.name = user.name;
       newUser.role = Role.ADMIN;
+      newUser.photo = faker.image.avatarGitHub();
       newUser.created_at = new Date();
       newUser.updated_at = new Date();
       await this.em.persistAndFlush(newUser);

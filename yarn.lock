@@ -1205,10 +1205,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@faker-js/faker@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "@faker-js/faker@npm:8.1.0"
-  checksum: 76036cbad2f0735fe2a2834bb3e16233e7c1aa4998cf90dbd097631465f3fcd4e7022c901f80b6de1c25b47154880f06916609a81dacb039a25f9cb000a3ab4e
+"@faker-js/faker@npm:^8.4.1":
+  version: 8.4.1
+  resolution: "@faker-js/faker@npm:8.4.1"
+  checksum: d802d531f8929562715adc279cfec763c9a4bc596ec67b0ce43fd0ae61b285d2b0eec6f1f4aa852452a63721a842fe7e81926dce7bd92acca94b01e2a1f55f5a
   languageName: node
   linkType: hard
 
@@ -10338,7 +10338,7 @@ __metadata:
   resolution: "purchase-request-new-app@workspace:."
   dependencies:
     "@aws-sdk/client-s3": ^3.414.0
-    "@faker-js/faker": ^8.1.0
+    "@faker-js/faker": ^8.4.1
     "@mikro-orm/cli": ^5.9.8
     "@mikro-orm/core": ^5.9.8
     "@mikro-orm/migrations": ^5.9.8

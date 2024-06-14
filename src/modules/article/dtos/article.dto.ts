@@ -34,6 +34,10 @@ export class ArticleDTO {
 
   @ApiProperty()
   @Expose()
+  summary: string;
+
+  @ApiProperty()
+  @Expose()
   publishedAt: Date;
 
   @ApiProperty()

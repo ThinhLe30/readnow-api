@@ -16,12 +16,9 @@ import { Response } from "express";
 import {
   ApiResponseErrorCode,
   ApiResponseStatus,
-  Role,
 } from "src/common/enum/common.enum";
-import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
-import { RoleAuthGuard } from "src/common/guards/role-auth.guard";
+import { CustomAuthGuard } from "src/common/guards/custom-auth.guard";
 
-@UseGuards(JwtAuthGuard)
 @Controller("article-interact")
 @ApiTags("article-interact")
 export class ArticleInteractController {
@@ -30,7 +27,6 @@ export class ArticleInteractController {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
-  @UseGuards(RoleAuthGuard([Role.ADMIN, Role.USER]))
   @Post("view/:id")
   async viewArticle(
     @Res() res: Response,
@@ -57,7 +53,7 @@ export class ArticleInteractController {
     }
   }
 
-  @UseGuards(RoleAuthGuard([Role.ADMIN, Role.USER]))
+  @UseGuards(CustomAuthGuard)
   @Post("checklist/:id")
   async addChecklist(
     @Res() res: Response,
@@ -84,7 +80,7 @@ export class ArticleInteractController {
       });
     }
   }
-  @UseGuards(RoleAuthGuard([Role.ADMIN, Role.USER]))
+  @UseGuards(CustomAuthGuard)
   @Post("vote/:id")
   async addVote(
     @Res() res: Response,

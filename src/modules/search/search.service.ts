@@ -135,13 +135,6 @@ export class SearchService {
         articleVotes = voteRes.map((el) => el.article.id);
       }
       for (const resultDTO of resultDTOs) {
-        // if (articleCheckList.includes(resultDTO.id) || articleVotes.includes(resultDTO.id)) {
-        //   resultDTO.isChecked = true;
-        //   resultDTO.isVoted =true;
-
-        // } else {
-        //   resultDTO.isChecked = false;
-        // }
         resultDTO.isChecked = articleCheckList.includes(resultDTO.id);
         resultDTO.isVoted = articleVotes.includes(resultDTO.id);
         resultDTO.category = plainToInstance(CategoryDTO, resultDTO.category);
@@ -167,7 +160,7 @@ export class SearchService {
     }
   }
 
-  async getRecentArticle() {
+  async getRecentArticle(loginID: string) {
     try {
       const queryObjDate = {};
       const currentDate = new Date();
@@ -190,10 +183,27 @@ export class SearchService {
           orderBy: { publishedAt: "DESC" },
         }
       );
+      let articleCheckList = [];
+      let articleVotes = [];
+      if (loginID) {
+        const res = await this.checklistRepository.find({
+          user: { id: loginID },
+        });
+        articleCheckList = res.map((el) => el.article.id);
+        const voteRes = await this.voteRepository.find({
+          user: { id: loginID },
+        });
+        articleVotes = voteRes.map((el) => el.article.id);
+      }
       const resultDTOs = plainToInstance(SearchResultDTO, articles);
-      resultDTOs.forEach((resultDTO) => {
+      for (const resultDTO of resultDTOs) {
+        resultDTO.isChecked = articleCheckList.includes(resultDTO.id);
+        resultDTO.isVoted = articleVotes.includes(resultDTO.id);
         resultDTO.category = plainToInstance(CategoryDTO, resultDTO.category);
-      });
+        resultDTO.voteCount = await this.voteRepository.count({
+          article: { id: resultDTO.id },
+        });
+      }
       return resultDTOs;
     } catch (error) {
       this.logger.error(
@@ -205,7 +215,7 @@ export class SearchService {
     }
   }
 
-  async getTrendingArticle() {
+  async getTrendingArticle(loginID: string) {
     try {
       const articles = await this.articleRepository.find(
         {
@@ -216,10 +226,27 @@ export class SearchService {
           limit: MAX_TRENDING_ARTICLES,
         }
       );
+      let articleCheckList = [];
+      let articleVotes = [];
+      if (loginID) {
+        const res = await this.checklistRepository.find({
+          user: { id: loginID },
+        });
+        articleCheckList = res.map((el) => el.article.id);
+        const voteRes = await this.voteRepository.find({
+          user: { id: loginID },
+        });
+        articleVotes = voteRes.map((el) => el.article.id);
+      }
       const resultDTOs = plainToInstance(SearchResultDTO, articles);
-      resultDTOs.forEach((resultDTO) => {
+      for (const resultDTO of resultDTOs) {
+        resultDTO.isChecked = articleCheckList.includes(resultDTO.id);
+        resultDTO.isVoted = articleVotes.includes(resultDTO.id);
         resultDTO.category = plainToInstance(CategoryDTO, resultDTO.category);
-      });
+        resultDTO.voteCount = await this.voteRepository.count({
+          article: { id: resultDTO.id },
+        });
+      }
       return resultDTOs;
     } catch (error) {
       this.logger.error(

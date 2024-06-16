@@ -22,6 +22,7 @@ import { CategoryDTO } from "../category/dtos/category.dto";
 import { plainToInstance } from "class-transformer";
 import { CategoryService } from "../category/category.service";
 import { CustomAuthGuard } from "src/common/guards/custom-auth.guard";
+import { log } from "console";
 @ApiTags("search")
 @Controller("search")
 export class SearchController {
@@ -104,10 +105,12 @@ export class SearchController {
   }
 
   // search article
+  @UseGuards(CustomAuthGuard)
   @Get("recents")
   async getRecentArticle(@Res() res: Response, @Req() req) {
     try {
-      const results = await this.searchService.getRecentArticle();
+      const loginId = req.user ? req.user.id : null;
+      const results = await this.searchService.getRecentArticle(loginId);
       res.status(ApiResponseErrorCode.SUCCESS).json({
         status: ApiResponseStatus.SUCCESS,
         message: "Get articles successfully",
@@ -126,11 +129,13 @@ export class SearchController {
     }
   }
 
+  @UseGuards(CustomAuthGuard)
   // search article
   @Get("trending")
   async getTrendingArticle(@Res() res: Response, @Req() req) {
     try {
-      const results = await this.searchService.getTrendingArticle();
+      const loginId = req.user ? req.user.id : null;
+      const results = await this.searchService.getTrendingArticle(loginId);
       res.status(ApiResponseErrorCode.SUCCESS).json({
         status: ApiResponseStatus.SUCCESS,
         message: "Get articles successfully",

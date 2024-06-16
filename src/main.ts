@@ -13,7 +13,7 @@ async function bootstrap() {
     .setDescription("ReadNow API description")
     .setVersion("1.0")
     .addServer("http://localhost:3003/", "Local environment")
-    .addServer("http://3.109.155.170:3003/", "Deploy environment")
+    .addServer("http://65.0.120.252:3003/", "Deploy environment")
     .addTag("readnow-api")
     .build();
   const document = SwaggerModule.createDocument(app, config);

@@ -9,11 +9,12 @@ import { CategoryService } from "../category/category.service";
 import { UsersService } from "../users/users.service";
 import { User } from "src/entities";
 import { CheckList } from "src/entities/checklist.entity";
+import { Vote } from "src/entities/vote.entity";
 
 @Module({
   controllers: [SearchController],
   imports: [
-    MikroOrmModule.forFeature([Article, Category, User, CheckList]),
+    MikroOrmModule.forFeature([Article, Category, User, CheckList, Vote]),
     ArticleModule,
   ],
   providers: [SearchService, CategoryService, UsersService],

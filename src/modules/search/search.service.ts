@@ -1,20 +1,20 @@
 import { EntityManager, EntityRepository } from "@mikro-orm/core";
 import { InjectRepository } from "@mikro-orm/nestjs";
 import { Inject, Injectable, Logger } from "@nestjs/common";
-import { Query } from "express-serve-static-core";
-import { now } from "moment";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 import { Article } from "src/entities/article.entity";
 import { SearchDTO } from "./dto/search-dto.dto";
 import Decimal from "decimal.js";
 import { SearchResultDTO } from "./dto/search.dto";
-import { plainToClass, plainToInstance } from "class-transformer";
+import { plainToInstance } from "class-transformer";
 import { CategoryDTO } from "../category/dtos/category.dto";
 import {
   MAX_RECENT_ARTICLES_DATE,
   MAX_TRENDING_ARTICLES,
 } from "src/common/constants/common";
 import { CheckList } from "src/entities/checklist.entity";
+import { Vote } from "src/entities/vote.entity";
+import { ar } from "@faker-js/faker";
 @Injectable()
 export class SearchService {
   constructor(
@@ -23,6 +23,8 @@ export class SearchService {
     private readonly articleRepository: EntityRepository<Article>,
     @InjectRepository(CheckList)
     private readonly checklistRepository: EntityRepository<CheckList>,
+    @InjectRepository(Vote)
+    private readonly voteRepository: EntityRepository<Vote>,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
   async searchArticle(searchDTO: SearchDTO, loginID: string) {
@@ -63,7 +65,6 @@ export class SearchService {
       ];
 
       const queryObjCategories = {};
-      console.log(searchDTO.categories);
       if (searchDTO.categories.length > 0) {
         queryObjCategories["$and"] = [
           {
@@ -73,6 +74,7 @@ export class SearchService {
           },
         ];
       }
+
       const queryObjDate = {};
       if (searchDTO.fromDate) {
         queryObjDate["$and"] = [
@@ -121,22 +123,35 @@ export class SearchService {
       const numberOfPage = new Decimal(total).div(limit).ceil().d[0];
       const resultDTOs = plainToInstance(SearchResultDTO, articles);
       let articleCheckList = [];
+      let articleVotes = [];
       if (loginID) {
         const res = await this.checklistRepository.find({
           user: { id: loginID },
         });
         articleCheckList = res.map((el) => el.article.id);
+        const voteRes = await this.voteRepository.find({
+          user: { id: loginID },
+        });
+        articleVotes = voteRes.map((el) => el.article.id);
       }
-      resultDTOs.forEach((resultDTO) => {
-        if (articleCheckList.includes(resultDTO.id)) {
-          resultDTO.isChecked = true;
-        } else {
-          resultDTO.isChecked = false;
-        }
+      for (const resultDTO of resultDTOs) {
+        // if (articleCheckList.includes(resultDTO.id) || articleVotes.includes(resultDTO.id)) {
+        //   resultDTO.isChecked = true;
+        //   resultDTO.isVoted =true;
+
+        // } else {
+        //   resultDTO.isChecked = false;
+        // }
+        resultDTO.isChecked = articleCheckList.includes(resultDTO.id);
+        resultDTO.isVoted = articleVotes.includes(resultDTO.id);
         resultDTO.category = plainToInstance(CategoryDTO, resultDTO.category);
-      });
+        resultDTO.voteCount = await this.voteRepository.count({
+          article: { id: resultDTO.id },
+        });
+      }
       const currentPage = Number(searchDTO.page >= 1 ? searchDTO.page : 1);
       const nextPage = currentPage + 1 <= numberOfPage ? currentPage + 1 : null;
+      console.log("resultDTOs", resultDTOs);
       return {
         articles: resultDTOs,
         metadata: {

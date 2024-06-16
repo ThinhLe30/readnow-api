@@ -42,7 +42,15 @@ export class SearchResultDTO {
 
   @ApiProperty()
   @Expose()
+  voteCount: number;
+
+  @ApiProperty()
+  @Expose()
   isChecked: boolean = false;
+
+  @ApiProperty()
+  @Expose()
+  isVoted: boolean = false;
 
   @ApiProperty()
   @Expose()

@@ -6,6 +6,7 @@ import { CheckList } from "src/entities/checklist.entity";
 import { SearchResultDTO } from "../search/dto/search.dto";
 import { plainToInstance } from "class-transformer";
 import { CategoryDTO } from "../category/dtos/category.dto";
+import { Vote } from "src/entities/vote.entity";
 
 @Injectable()
 export class ChecklistService {
@@ -13,6 +14,8 @@ export class ChecklistService {
     private readonly em: EntityManager,
     @InjectRepository(CheckList)
     private readonly checklistRepository: EntityRepository<CheckList>,
+    @InjectRepository(Vote)
+    private readonly voteRepository: EntityRepository<Vote>,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
   async getMycheckList(loginID: string) {
@@ -25,10 +28,18 @@ export class ChecklistService {
           populate: ["article", "article.category"],
         }
       );
+      let articleVotes = [];
+      if (loginID) {
+        const voteRes = await this.voteRepository.find({
+          user: { id: loginID },
+        });
+        articleVotes = voteRes.map((el) => el.article.id);
+      }
       const articles = checkLists.map((el) => {
         const dto = plainToInstance(SearchResultDTO, el.article);
         dto.category = plainToInstance(CategoryDTO, el.article.category);
         dto.isChecked = true;
+        dto.isVoted = articleVotes.includes(el.article.id);
         return dto;
       });
       return articles;

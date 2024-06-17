@@ -32,7 +32,8 @@ export class SearchService {
         searchDTO.keyword = "";
       }
       if (!searchDTO.toDate) {
-        searchDTO.toDate = new Date();
+        // to date plus one day
+        searchDTO.toDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
       }
       if (!searchDTO.categories) {
         searchDTO.categories = [];
@@ -165,7 +166,7 @@ export class SearchService {
         page = 0;
       }
       const queryObjDate = {};
-      const currentDate = new Date();
+      const currentDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
       const lastWeekDate = new Date(
         currentDate.getTime() - MAX_RECENT_ARTICLES_DATE * 24 * 60 * 60 * 1000
       );

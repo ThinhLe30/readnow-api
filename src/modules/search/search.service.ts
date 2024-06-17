@@ -14,7 +14,6 @@ import {
 } from "src/common/constants/common";
 import { CheckList } from "src/entities/checklist.entity";
 import { Vote } from "src/entities/vote.entity";
-import { ar } from "@faker-js/faker";
 @Injectable()
 export class SearchService {
   constructor(

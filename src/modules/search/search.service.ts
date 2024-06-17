@@ -159,8 +159,11 @@ export class SearchService {
     }
   }
 
-  async getRecentArticle(loginID: string) {
+  async getRecentArticle(loginID: string, page: number) {
     try {
+      if (!page) {
+        page = 0;
+      }
       const queryObjDate = {};
       const currentDate = new Date();
       const lastWeekDate = new Date(
@@ -174,14 +177,23 @@ export class SearchService {
           },
         },
       ];
+      const offset = page >= 1 ? 10 * (page - 1) : 0;
       const articles = await this.articleRepository.find(
         {
           $and: [queryObjDate, { deleted_at: null }],
         },
         {
           orderBy: { publishedAt: "DESC" },
+          limit: 10,
+          offset: offset,
         }
       );
+      const total = await this.articleRepository.count({
+        $and: [queryObjDate, { deleted_at: null }],
+      });
+      const numberOfPage = new Decimal(total).div(10).ceil().d[0];
+      const currentPage = Number(page >= 1 ? page : 1);
+      const nextPage = currentPage + 1 <= numberOfPage ? currentPage + 1 : null;
       let articleCheckList = [];
       let articleVotes = [];
       if (loginID) {
@@ -203,7 +215,15 @@ export class SearchService {
           article: { id: resultDTO.id },
         });
       }
-      return resultDTOs;
+      return {
+        articles: resultDTOs,
+        metadata: {
+          total: total,
+          currentPage: currentPage,
+          nextPage: nextPage,
+          numberOfPage: numberOfPage,
+        },
+      };
     } catch (error) {
       this.logger.error(
         "Calling getRecentArticle()",
@@ -221,7 +241,7 @@ export class SearchService {
           $and: [{ deleted_at: null }],
         },
         {
-          orderBy: { publishedAt: "DESC", viewCount: "DESC" },
+          orderBy: { viewCount: "DESC", publishedAt: "DESC" },
           limit: MAX_TRENDING_ARTICLES,
         }
       );

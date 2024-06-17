@@ -51,7 +51,7 @@ export class SearchController {
       });
       res.status(ApiResponseErrorCode.SUCCESS).json({
         status: ApiResponseStatus.SUCCESS,
-        message: "Get utilities successfully",
+        message: "Get category successfully",
         data: {
           categories: catesDTO,
         },
@@ -107,14 +107,20 @@ export class SearchController {
   // search article
   @UseGuards(CustomAuthGuard)
   @Get("recents")
-  async getRecentArticle(@Res() res: Response, @Req() req) {
+  async getRecentArticle(
+    @Res() res: Response,
+    @Req() req,
+    @Query("page") page: number
+  ) {
     try {
       const loginId = req.user ? req.user.id : null;
-      const results = await this.searchService.getRecentArticle(loginId);
+      const results = await this.searchService.getRecentArticle(loginId, page);
       res.status(ApiResponseErrorCode.SUCCESS).json({
         status: ApiResponseStatus.SUCCESS,
         message: "Get articles successfully",
-        data: results,
+        data: {
+          ...results,
+        },
       });
     } catch (error) {
       this.logger.error(

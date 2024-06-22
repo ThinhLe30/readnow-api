@@ -188,6 +188,7 @@ export class SearchService {
           orderBy: { publishedAt: "DESC" },
           limit: 10,
           offset: offset,
+          populate: ["category"],
         }
       );
       const total = await this.articleRepository.count({

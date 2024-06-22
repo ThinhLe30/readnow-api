@@ -129,6 +129,7 @@ export class ArticleService {
         );
         article.imageURL = photo;
       }
+      article.publishedAt = dto.publishedAt;
       article.description = dto.description;
       article.author = dto.author;
       article.title = dto.title;

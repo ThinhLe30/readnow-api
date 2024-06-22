@@ -14,7 +14,7 @@ import {
 } from "src/common/constants/common";
 import { CheckList } from "src/entities/checklist.entity";
 import { Vote } from "src/entities/vote.entity";
-import { ar } from "@faker-js/faker";
+
 @Injectable()
 export class SearchService {
   constructor(
@@ -111,6 +111,7 @@ export class SearchService {
           populate: ["category"],
           limit: limit,
           offset: offset,
+          orderBy: { publishedAt: "DESC" },
         }
       );
       const total = await this.articleRepository.count({

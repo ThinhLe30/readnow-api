@@ -20,33 +20,6 @@ export class ChecklistService {
   ) {}
   async getMycheckList(loginID: string) {
     try {
-      // const checkLists = await this.checklistRepository.find(
-      //   {
-      //     user: { id: loginID },
-      //   },
-      //   {
-      //     populate: ["article", "article.category"],
-      //   }
-      // );
-      // let articleVotes = [];
-      // if (loginID) {
-      //   const voteRes = await this.voteRepository.find({
-      //     user: { id: loginID },
-      //   });
-      //   articleVotes = voteRes.map((el) => el.article.id);
-      // }
-
-      // const articles = await checkLists.map(async (el) => {
-      //   const dto = plainToInstance(SearchResultDTO, el.article);
-      //   dto.category = plainToInstance(CategoryDTO, el.article.category);
-      //   dto.isChecked = true;
-      //   dto.isVoted = articleVotes.includes(el.article.id);
-      //   dto.voteCount = await this.voteRepository.count({
-      //     article: { id: dto.id },
-      //   });
-      //   return dto;
-      // });
-      // return articles;
       const checkLists = await this.checklistRepository.find(
         {
           user: { id: loginID },

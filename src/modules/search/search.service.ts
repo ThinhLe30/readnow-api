@@ -286,6 +286,7 @@ export class SearchService {
         result.isChecked = articleCheckList.includes(result.id);
         result.isVoted = articleVotes.includes(result.id);
         result.voteCount = articles[index]["vote_count"];
+        result.imageURL = articles[index]["image_url"];
         resultDTOs.push(result);
       }
       return resultDTOs;

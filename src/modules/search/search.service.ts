@@ -137,6 +137,10 @@ export class SearchService {
         articleVotes = voteRes.map((el) => el.article.id);
       }
       for (const resultDTO of resultDTOs) {
+        resultDTO.striptContent = resultDTO.content.replace(
+          /(<([^>]+)>)/gi,
+          ""
+        );
         resultDTO.isChecked = articleCheckList.includes(resultDTO.id);
         resultDTO.isVoted = articleVotes.includes(resultDTO.id);
         resultDTO.category = plainToInstance(CategoryDTO, resultDTO.category);
@@ -146,7 +150,6 @@ export class SearchService {
       }
       const currentPage = Number(searchDTO.page >= 1 ? searchDTO.page : 1);
       const nextPage = currentPage + 1 <= numberOfPage ? currentPage + 1 : null;
-      console.log("resultDTOs", resultDTOs);
       return {
         articles: resultDTOs,
         metadata: {
@@ -212,6 +215,10 @@ export class SearchService {
       }
       const resultDTOs = plainToInstance(SearchResultDTO, articles);
       for (const resultDTO of resultDTOs) {
+        resultDTO.striptContent = resultDTO.content.replace(
+          /(<([^>]+)>)/gi,
+          ""
+        );
         resultDTO.isChecked = articleCheckList.includes(resultDTO.id);
         resultDTO.isVoted = articleVotes.includes(resultDTO.id);
         resultDTO.category = plainToInstance(CategoryDTO, resultDTO.category);
@@ -278,6 +285,7 @@ export class SearchService {
         result.title = articles[index]["title"];
         result.description = articles[index]["description"];
         result.content = articles[index]["content"];
+        result.striptContent = result.content.replace(/(<([^>]+)>)/gi, "");
         result.author = articles[index]["author"];
         result.publishedAt = articles[index]["published_at"];
         result.viewCount = articles[index]["view_count"];

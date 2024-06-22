@@ -37,13 +37,11 @@ export class AuthController {
   async googleLogin(@Res() res: Response, @Req() req) {
     try {
       const firebaseInfo = req.firebaseUser;
-      console.log(firebaseInfo);
       if (new Date(firebaseInfo.exp * 1000) < new Date()) {
         throw new HttpException("Token expired", HttpStatus.UNAUTHORIZED);
       }
 
       const accessToken = await this.authService.googleLogin(firebaseInfo);
-      console.log(accessToken);
       res.status(200).json({
         message: "Login Successfully",
         status: ApiResponseStatus.SUCCESS,
@@ -69,7 +67,6 @@ export class AuthController {
   ) {
     try {
       const accessToken = await this.authService.googleLoginV2(loginDto);
-      console.log(accessToken);
       res.status(200).json({
         message: "Login Successfully",
         status: ApiResponseStatus.SUCCESS,

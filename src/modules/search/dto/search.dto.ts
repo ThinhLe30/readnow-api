@@ -34,6 +34,10 @@ export class SearchResultDTO {
 
   @ApiProperty()
   @Expose()
+  striptContent: string;
+
+  @ApiProperty()
+  @Expose()
   publishedAt: Date;
 
   @ApiProperty()

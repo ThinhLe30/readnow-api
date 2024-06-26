@@ -26,6 +26,7 @@ export class ChecklistService {
         },
         {
           populate: ["article", "article.category"],
+          orderBy: { created_at: "DESC" },
         }
       );
 

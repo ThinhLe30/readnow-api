@@ -27,6 +27,10 @@ export class SearchService {
     private readonly voteRepository: EntityRepository<Vote>,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
+  // decodeHTMLEntities(text: string): string {
+  //   return new DOMParser().parseFromString(text, "text/html").documentElement
+  //     .textContent;
+  // }
   async searchArticle(searchDTO: SearchDTO, loginID: string) {
     try {
       if (!searchDTO.keyword) {

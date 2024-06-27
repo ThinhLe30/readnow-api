@@ -289,6 +289,7 @@ export class SearchService {
         result.title = articles[index]["title"];
         result.description = articles[index]["description"];
         result.content = articles[index]["content"];
+        result.summary = articles[index]["summary"];
         result.striptContent = result.content.replace(/(<([^>]+)>)/gi, "");
         result.author = articles[index]["author"];
         result.publishedAt = articles[index]["published_at"];
